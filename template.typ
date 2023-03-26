@@ -43,13 +43,16 @@
   set page(
     paper: "a4",
     margin: (left: 35mm, right: 25mm, top: 25mm, bottom: 25mm),
+    // TODO: This is currently bugged, the outline won't respect those numbers
     // Page numbers will start from one less, because the title page doesn't count
-    numbering: (num, body) => if num == 1 { "" } else { str(num - 1) },
+    // numbering: (num, body) => if num == 1 { "" } else { str(num - 1) },
+    numbering: (num, body) => if num == 1 { "" } else { str(num) },
     number-align: center,
   )
 
   set text(
-    font: "Source Sans Pro", 
+    // font: "Source Sans Pro", 
+    font: "Constantia", 
     lang: "en",
     size: 12pt,
     spacing: 150%
@@ -78,7 +81,10 @@
 
   // Main body.
   set par(justify: true)
-  set page(header: align(center, smallcaps(title)))
+  set page(header: {
+    align(center, smallcaps(title))
+    line(length: 100%, stroke: 0.5pt)
+  })
 
   body
 

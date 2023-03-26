@@ -1,4 +1,5 @@
 #import "template.typ": project
+#import "utils.typ" : *
 
 #show: project.with(
   title: "General Predicate Testing",
@@ -8,18 +9,46 @@
   ),
   supervisor: (
     name: "Kovács Attila",
-    affiliation: "Professor, Ph.D"
+    affiliation: "Professor, Ph.D."
   ),
   university: (
     name: "Eötvös Loránd University",
     faculty: "Faculty of Informatics",
     department: "Dept. of Computer Algebra",
     city: "Budapest",
-    logo: "elte_cimer.jpg"
+    logo: "images/elte_cimer.jpg"
   ),
   date: "2023",
   biblography_file: "works.bib"
 )
 
 #include "chapters/introduction.typ"
-#include "chapters/related_work.typ"
+
+
+= Other test case generation methods
+== Equivalence Partitioning
+== Boundary Value Analysis
+== Random testing
+
+= Intervals
+== Simple Intervals
+== Multiintervals
+
+#include "chapters/gpt_algo.typ"
+
+= GPT Lang
+== Parser
+== AST, IR
+
+= Graph Reduction
+== Why even graph reduce
+== MONKE
+== Least Losing Nodes
+== Least Losing Edges
+
+= Code architecture
+== Rust
+== Frontend app, webassembly
+
+= Future improvement ideas
+
