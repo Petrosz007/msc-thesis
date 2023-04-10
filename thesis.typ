@@ -30,9 +30,7 @@
 == Boundary Value Analysis
 == Random testing
 
-= Intervals
-== Simple Intervals
-== Multiintervals
+#include "chapters/intervals.typ"
 
 #include "chapters/gpt_algo.typ"
 
