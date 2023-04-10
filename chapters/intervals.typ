@@ -61,16 +61,16 @@ Pseudocode for calculating the intersection of two intervals `self` and `other`:
 #todo[Here we need a lo_cmp and a hi_cmp instead of the > or <, because if they have the same value the boundary makes the difference. Also, when comparing intervals (for intersection, union, or complement) it would make the cases more explicit.]
 ```py
 if self doesn't intersects_with other:
-    return No Intersection
+  return No Intersection
 
 interval_with_lower_hi = if self.hi > other.hi then self else other
 interval_with_higher_lo = if self.lo < other.lo then self else other
 
 return Interval {
-    lo_boundary: interval_with_higher_lo.lo_boundary
-    lo: interval_with_higher_lo.lo
-    hi: interval_with_lower_hi.hi
-    hi_boundary: interval_with_lower_hi.hi_boundary
+  lo_boundary: interval_with_higher_lo.lo_boundary
+  lo: interval_with_higher_lo.lo
+  hi: interval_with_lower_hi.hi
+  hi_boundary: interval_with_lower_hi.hi_boundary
 }
 ```
 
@@ -96,8 +96,108 @@ We can just create a multiinterval from the two intervals. With this constructor
 
 == Multiintervals 
 
+Multiintervals are intervals composed of multiple simple intervals. They are required for GPT, because for example if we have a predicate that states that $x > 0 and x <= 10 and x in.not {5,7}$ we could represent the interval of values $x$ could take as the the multiinterval $(0,5)" "(5,7)" "(7,10]$.
+
+An empty multiinterval is one which has no intervals. We don't store empty intervals in mutliintervals.
+
+An invariant of the Multiinterval is that its intervals are sorted in increasing order.
+
+=== Cleaning
+
+There could be multiintervals, which are not 'clean', or not in a sematically correct form. Take for example $(10, infinity)" "(-5,5)" "[0, 20]$.
+
+Here are the steps to clean a multiinterval:
+
+1. *Removing empty intervals.* Empty intervals hold no values, so they are unnecessary to have in a multiinterval. From the example we'd remove $(-5,-5)$
+2. *Sorting the intervals.* Intervals should be in an increasing order inside a multiinterval. When comparing intervals we compair their los. The example would change from $(10, infinity)" "[0, 20]$ to $[0, 20]" "(10, infinity)$.
+3. *Merging overlapping intervals.* If intervals would would intersect, we can merge them together. The example would become from $[0, 20]" "(10, infinity)$ to $[0, infinity)$.
+
+We can define a constructor `Multiinterval::from_intervals` that will always create a clean multiinterval from a list of intervals:
+
+```py
+def Multiinterval::from_intervals(intervals):
+  multiinterval = new Multiinterval(intervals)
+
+  multiinterval.clean()
+
+  return multiinterval
+```
+
 === Intersection
+
+*Can intersect?*
+To check that two mutliintervals intersect, we can check if any of their intervals intersect. Pseudocode:
+
+```py
+for x in self.intervals:
+  for y in other.intervals:
+    if x.intersects_with(y):
+      return True
+
+return false
+```
+
+#todo[Because the intervals are in increasing order, we could do an $O(n)$ algorithm instead of an $O(n^2)$]
+
+*Calculating the intersection*
+
+Pseudocode:
+
+```py
+intersected_intervals = []
+
+for x in self.intervals:
+  for y in other.intervals:
+    if x.intersects_with(y):
+      intersected_intervals += x.intersect(y)
+
+return Multiinterval::from_intervals(intersected_intervals)
+```
+
+We try to intersect all the intervals. The `Multiinterval::from_intervals` constructor will call a `clean()`, so the resulting intersected Multiinterval will be in the correct form.
 
 === Union
 
+We take both Multiintervals' intervals, concatenate them and create a Multiintevral from them. This constructor call `clean()`, so it'll take care of sorting and overlapping intervals.
+
+```py
+return Multiinterval::from_intervals(self.intervals ++ other.intervals)
+```
+
 === Complement
+
+The complement of an interval contains all the elements which are not in the interval. In simple terms, we just return all the 'space' between our intervals.
+
+For example:
+
+- Multiinterval: $[-42, 3)" "(3, 67)" "(100, 101)" "[205, 607]" "(700, infinity)$
+- Complement: $(-infinity, -42)" "[3, 3]" "[67, 100]" "[101, 205)" "(607, 700]$.
+
+Pseudocode:
+
+```py
+if self.is_empty()
+  return (-infinity, infinity)
+
+complement_intervals = []
+
+if intervals.lowest_lo() != -infinity:
+  complement_intervals += Interval(Open, -infinity, lowest_lo, lowest_boundary)
+
+for [a, b] in self.intervals.window(2):
+  complement_intervals += Interval(a.hi_boundary.complement(), a.hi, b.lo, b.lo_boundary.complement())
+
+if intervals.highest_hi() != -infinity:
+  complement_intervals += Interval(highest_boundary, highest_hi, infinity, Open)
+
+return new Multiinterval(complement_intervals)
+```
+
+We go through the intervals in pairs. The `.window(2)` function returns all the neighbouring pairs in a list. It is a sliding window. We always create an interval between the hi of the first and the lo of the second interval, as this is the space not covered by our multiinterval.
+
+As in the sliding window we only look at the hi of the left side and the lo of the right side, we have to handle the case at the edges of the multiinterval. If our multiinterval is not unbounded, the complement has to be unbounded.
+
+We don't have to clean the Multiinterval, because of its invariants it won't have empty intervals, it will be sorted, and it won't have overlapping intervals.
+
+
+
