@@ -1,3 +1,4 @@
 {
-  "ltex.enabled": ["typst", "markdown", "bibtex"]
+  "ltex.enabled": ["typst", "markdown", "bibtex"],
+  "pasteImage.path": "${projectRoot}/images"
 }
