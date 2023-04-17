@@ -51,8 +51,55 @@ _Example:_ $(-infinity, 10]$ will have the Off interval of $[10.01,infinity)$
 
 For multiintervals we use the same equivalence partitioning technique. We calculate the partition for all the intervals inside the multiinterval and create a multiinterval out of the partitions.
 
-=== Test case generation in GPT
+== Test case generation in GPT
 
+We can generate multiple intervals with GPT that we can select test values from. But this is just for one predicate. To test all the predicates in a condition, we use the following technique:
+
+- Creating an NTuple from the condition.
+- Generating the IN, ININ, and ON values for each variable in the NTuple.
+- Generating the OFF and OUT values for each variable in the NTuple.
+
+Let's look at each of those steps in detail:
+
+=== Creating an NTuple from the condition
+
+An NTuple is a tuple with N elements. In GPT I use the term NTuple for a map of the variable names to the EPs. This is because of historical reasons, originally these were literal tuples, but working with an explicit variable to EP mapping is easier to handle during graph reduction.
+
+In GPT we can inly create NTuples from a condition that only contains conjunctions. I'll explain how to convert a condition with disjunctions to conjunctive forms in a later chapter. #todo[ref that chapter.]
+
+Example: The condition $x < 10$ && $y$ in $[0, 20]$ && $z ==$ true would become the following NTuple:
+```
+{
+  x: (-Inf, 10)
+  y: [0, 20]
+  z: true
+}
+```
+
+=== Generating the IN, ININ, and ON values for each variable in the NTuple
+
+Now we have an NTuple with variables that have EPs associated with them. We take the NTuple and for each variable we generate the In, InIn, and On values for each. Because the values are acceptable values, we can group them together and check all of the variables' values in one NTuple. This won't be the case for Off and Out.
+
+One complication is, that On (and later Off) can generate multiple values. When we have could have multiple values for variables, we take the Cartesian product of the possibilities. This is further complicated by the fact that we could have N variables with M possible values and we'd have to take the Cartesian product of all of those.
+
+Example from the previous NTuple:
+```
+In:  { x: (-Inf, 9.99], y: [0, 20], z: true }
+InIn: { x: (-Inf, 9.98], y: [0.01, 19.99], z: true }
+On:  { x: 9.99, y: 0 and 20, z: true } 
+The Cartesian product of this is { x: 9.99, y: 0, z: true } and { x: 9.99, y: 20, z: true }
+```
+
+Example 2: Let's look at the On and Cartesian product for the following NTuple: \
+`{ a: [0, 10], b: [20, 30] }` \
+The On values would be: `{ a: 0 and 10, b: 20 and 30 }`
+The Cartesian products of this is:
+```
+{ a: 0, b: 20 }
+{ a: 0, b: 30 }
+{ a: 10, b: 20 }
+{ a: 10, b: 30 }
+```
 
 
 
