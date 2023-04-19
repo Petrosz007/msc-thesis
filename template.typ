@@ -46,7 +46,10 @@
     // TODO: This is currently bugged, the outline won't respect those numbers
     // Page numbers will start from one less, because the title page doesn't count
     // numbering: (num, body) => if num == 1 { "" } else { str(num - 1) },
-    numbering: (num, body) => if num == 1 { "" } else { str(num) },
+    numbering: (..nums) => {
+      let num = nums.pos().at(0);
+      if num == 1 { "" } else { str(num) }
+    },
     number-align: center,
   )
 
