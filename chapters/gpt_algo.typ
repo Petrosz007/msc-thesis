@@ -1,6 +1,9 @@
 #import "../utils.typ" : *
 
 = GPT Algorithm
+
+Kovacs Attila and Forgacs Istvan proposed General Predicate Testing @thebook[p. 69]. It is a method of black box test case generation, based on and extending BVA.
+
 #todo[Explain precision]
 #todo[In this doc when we refer to intervals, we could mean multiintervals, for the sake of simplicity.]
 
