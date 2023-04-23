@@ -42,6 +42,8 @@
 == Least Losing Nodes
 == Least Losing Edges
 
+#include "chapters/examples.typ"
+
 = Code architecture
 == Rust
 == Frontend app, webassembly
@@ -49,4 +51,6 @@
 #include "chapters/future.typ"
 
 #include "chapters/todos.typ"
+
+#include "chapters/appendix.typ"
 
