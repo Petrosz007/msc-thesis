@@ -1,0 +1,14 @@
+graph G {
+    a [label="(-Inf, Inf)"]
+    b [label="[0, 20]", style=invis]
+    c [label="[5,5]"]
+    // d [label="[-2, 2]"]
+    d [label="[0, 2]", color=darkblue, style=bold]
+    
+    a -- b [color=gray, style=invis]
+    a -- c
+    a -- d [color=gray, style=dashed]
+
+    b -- c [color=gray, style=invis]
+    b -- d [color=red, style=invis]
+}

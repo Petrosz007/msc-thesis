@@ -36,11 +36,7 @@
 
 #include "chapters/gpt_lang.typ"
 
-= Graph Reduction
-== Why even graph reduce
-== MONKE
-== Least Losing Nodes
-== Least Losing Edges
+#include "chapters/graph_reduction.typ"
 
 #include "chapters/examples.typ"
 

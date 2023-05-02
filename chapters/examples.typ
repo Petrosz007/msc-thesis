@@ -291,7 +291,7 @@ In conclusion, my GPT implementation generated all the test cases that were ment
 
 #pagebreak()
 
-*For fun, let's make use of `||` in GPT Lang*
+*Let's make use of `||` in GPT Lang*
 
 "R2-1 Employees younger than 18 or at least 60 years, or employees with at least 30 years of service will receive 5 extra days."
 
@@ -309,23 +309,53 @@ if(age < 18 || age >= 60 || service >= 30)
 
 As we can see, it is significantly easier to write, and we don't have to think about how to manually create conjunctions and cover all the cases, as GPT does that for us.
 
-Generating test cases from the `||` version:
-#table(
-  columns: (auto, auto, auto),
-  [No.], [Test Case], [R1-1 No.],
-  [M001], [age: $[17, 17]$, service: $[30, infinity)$], [M21],
-  [M002], [age: $[18, 18]$, service: $[30, 30]$], [M16],
-  [M003], [age: $(-infinity, 16]$, service: $[30, infinity)$], [M23],
-  [M004], [age: $[18, 18]$, service: $(-infinity, 28]$], [-],
-  [M005], [age: $[19, 58]$, service: $[31, infinity)$], [M18],
-  [M006], [age: $[60, 60]$, service: $[30, infinity)$], [M22],
-  [M007], [age: $[18, 59]$, service: $[29, 29]$], [M19],
-  [M008], [age: $[61, infinity)$, service: $[30, infinity)$], [M24],
-  [M009], [age: $[59, 59]$, service: $[30, 30]$], [M17],
-)
+// Generating test cases from the `||` version:
+// #table(
+//   columns: (auto, auto, auto),
+//   [No.], [Test Case], [R1-1 No.],
+//   [M001], [age: $[17, 17]$, service: $[30, infinity)$], [M21],
+//   [M002], [age: $[18, 18]$, service: $[30, 30]$], [M16],
+//   [M003], [age: $(-infinity, 16]$, service: $[30, infinity)$], [M23],
+//   [M004], [age: $[18, 18]$, service: $(-infinity, 28]$], [-],
+//   [M005], [age: $[19, 58]$, service: $[31, infinity)$], [M18],
+//   [M006], [age: $[60, 60]$, service: $[30, infinity)$], [M22],
+//   [M007], [age: $[18, 59]$, service: $[29, 29]$], [M19],
+//   [M008], [age: $[61, infinity)$, service: $[30, infinity)$], [M24],
+//   [M009], [age: $[59, 59]$, service: $[30, 30]$], [M17],
+// )
 
-M004 is almost like M6, but M6 contains 29 and M004 doesn't.
+// M004 is almost like M6, but M6 contains 29 and M004 doesn't.
 
-As we can see, this only generated 9 test cases. This is significantly less than 24 generated previously. This is, because `||` is sensitive to the order of the predicates, as described in #todo[ref chapter that describes the execution order of `||`s]
+// As we can see, this only generated 9 test cases. This is significantly less than 24 generated previously. This is, because `||` is sensitive to the order of the predicates, as described in #todo[ref chapter that describes the execution order of `||`s]
 
-#todo[Explore if this is good or bad]
+// Generating test cases from the `||` version:
+// #table(
+//   columns: (auto, auto, auto),
+//   [No.], [Test Case], [R1-1 No.],
+//   [M001], [age: $[17, 17]$, service: $[29, 29]$], [M2],
+//   [M002], [age: $[17, 17]$, service: $(-infinity, 28]$], [-],
+//   [M003], [age: $(-infinity, 16]$, service: $[31, infinity)$], [M5 intersect M23],
+//   [M004], [age: $[60, 60]$, service: $[29, 29]$], [M9],
+//   [M005], [age: $(-infinity, 16]$, service: $(-infinity, 28]$], [M3],
+//   [M006], [age: $[17, 17]$, service: $[30, 30]$], [M4 intersect M21],
+//   [M007], [age: $[60, 60]$, service: $[30, 30]$], [M13 intersect M22],
+//   [M008], [age: $[61, infinity)$, service: $[31, infinity)$], [M14 intersect M24],
+//   [M009], [age: $[59, 59]$, service: $(-infinity, 28]$], [M11 inersect M20],
+//   [M0010], [age: $[60, 60]$, service: $[31, infinity)$], [M14],
+//   [M0011], [age: $[18, 18]$, service: $[30, 30]$], [M16],
+//   [M0012], [age: $[18, 18]$, service: $[29, 29]$], [M6 intersect M19],
+//   [M0013], [age: $[59, 59]$, service: $[30, 30]$], [M17],
+//   [M0014], [age: $[19, 58]$, service: $[31, infinity)$], [M18],
+//   [M0015], [age: $[61, infinity)$, service: $(-infinity, 28]$], [M10]
+// )
+
+// This only generated 15 test cases instead of the 24 generated previously. There are some test cases in this `||` solution which are the intersections of test cases from the previous solution. This is correct, because graph reduction could happen in the previous solution that would yield us these test cases.
+
+// Test cases not covered explicitly covered:
+// - _M1_: We have M005, which is stricter than M1.
+// - _M7_:
+// - M8
+// - M12
+// - M15
+
+#todo[Explore the non variable order dependent version]

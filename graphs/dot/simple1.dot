@@ -1,0 +1,13 @@
+graph G {
+    a [label="(-Inf, Inf)"]
+    b [label="[0, 20]"]
+    c [label="[5,5]"]
+    d [label="[-2, 2]"]
+    
+    a -- b [color=gray, style=dashed]
+    a -- c
+    a -- d [color=gray, style=dashed]
+
+    b -- c [color=gray, style=dashed]
+    b -- d [color=red]
+}
