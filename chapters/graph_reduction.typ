@@ -61,7 +61,7 @@ In step 5 it is enough to look at the edges which were originally connected to t
 
 This Graph Reduction is an NP-complete problem @thebook[p. 116]. Because of this, we can only create algorithms that approximate the most optimally reduced graph.
 
-As you can see, every step of our Graph Reduction basically creates a new graph. We remove and replace vertices, we remove edges. This poses a problem, because the order of reduction matters. Consider the following example:
+As you can see, every step of our Graph Reduction basically creates a new graph. We remove and replace vertices, we remove edges. This poses a problem, because the order of reduction matters. Consider the following example: #todo[O-O-O-O ahol ha O-O O-O bol 2 lesz, de O O-O O bol 3 lesz]
 
 #align(center, figure(image("../graphs/circo/lossy.dot.png", width: 55%), caption: [hmm]))
 
