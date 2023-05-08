@@ -1,0 +1,8 @@
+graph G {
+  a [label=""]
+  b [label=""]
+  c [label=""]
+
+  a -- b [style=invis]
+  b -- c [style=invis]
+}

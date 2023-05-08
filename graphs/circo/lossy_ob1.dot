@@ -1,0 +1,10 @@
+graph G {
+  a [label=""]
+  b [label=""]
+  c [label=""]
+  d [label=""]
+
+  a -- b [color=gray, style=dashed]
+  b -- c [color=red]
+  c -- d [color=gray, style=dashed]
+}
