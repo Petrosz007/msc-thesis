@@ -23,9 +23,13 @@ The following figure shows the two functions, $f(x) = 0$ in green and $f(x) = x$
 
 #align(center, image("../images/2023-04-17-22-40-15.png", height: 20%))
 
+#pagebreak()
+
 == Linear Predicates
 
-GPT can currently only handle predicates with one variable. Linear predicates are not supported. 
+GPT can currently only handle predicates with one variable. Linear predicates are not supported.
+
+_Example:_ $i < j + 1$
 
 == Different equivalence partitions for implementations
 
@@ -84,3 +88,7 @@ This is, because this implementation has different equivalence partitions. In th
 Because we've differed from the equivalence partitions that we've defined our GPT Lang definition with, the way we can solve this is to create another GPT Lang definition for this implementation. This way, we'll have a test case that covers the `service >= 15 || age >= 45` condition, which didn't exist in the original one.
 
 This is related to the Competent Programmer hypothesis #todo[link], because we don't want to test implementations that are vastly different or more overcomplicated than a simple solution. In this case, the else if, the nested if and additional `||` made this implementation more complex.
+
+== Supporting enums in GPT Lang
+
+#todo[write this]

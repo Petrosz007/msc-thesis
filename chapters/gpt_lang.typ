@@ -98,3 +98,4 @@ Interval condition: \
 
 == Flattening the IR
 
+== Converting disjunctions to conjunctions
