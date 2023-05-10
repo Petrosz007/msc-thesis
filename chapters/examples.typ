@@ -53,7 +53,9 @@ With my GPT:
   [M7], [age: $[19, infinity)$, service: $(-infinity, 29]$], [B4]
 )
 
-As we can see, my GPT covers all the test cases in the book, but has an additional test case: M1. This is, because in the book B3 is said to be an IN, but it is actually an ININ. M1 in this case is the IN. #todo[hmm]
+As we can see, my GPT covers all the test cases in the book, but has an additional test case: M1. This is, because in the book B3 is said to be an IN, but it is actually an ININ. M1 in this case is the IN. This is, because in the book In and ININ are not differentiated this concretely. Because ININ is a subset of IN it is actually enough to generate the ININ for an interval.
+
+I'm generating both the IN and the ININ, because there could be intervals which have an IN but not ININ (for example $[0,0.1]$ if the precision is $0.1$.). It is easier to generate both the IN and ININ and let Graph Reduction take care of joining the intervals.
 
 #pagebreak()
 
@@ -199,9 +201,13 @@ All the test cases from the book are covered by my GPT.
 
 M32 is the IN as explained previously. 
 
-M33, M35, and M37 are ON points. My GPT merges treats service as $[15, 30)$ and age as $[18, 45)$. When generating ON points age will have 18 and 44, service will have 15 and 29. My GPT takes the Cartesian product of these, that's why M34, M35, and M37 appeared, in addition to M36 which is in the book as B34.
+M33 and M35 are ON points. My GPT merges treats service as $[15, 30)$ and age as $[18, 45)$. When generating ON points age will have 18 and 44, service will have 15 and 29. My GPT takes the Cartesian product of these, that's why M34 and M35 appeared, in addition to M36 which is in the book as B34.
 
-#pagebreak()
+M37 is the ININ of the intervals. The books says, that the ON points are also IN points, that's why there are no explicit IN intervals. As discussed previously, my GPT generates both IN and ININ points, so this ININ appeared. Which is not a problem, as it is a valid test case.
+
+// #pagebreak()
+\
+
 
 *R1-3: IF age ≥ 45 AND service < 30 AND age < 60 THEN...*
 
@@ -238,56 +244,92 @@ All the test cases in the book are covered, except for B42. B42 is the combinati
 
 M46 is the IN, same as previously.
 
+#pagebreak()
+
 *Summary*
 
 In total, the book has 44 test cases, my GPT generated 55 test cases. 
 
 The 11 test cases not in the book are:
 - M1, M8, M15, M25, M32, M46 are INs (+6 test cases)
+- M37 is an ININ (+1 test case)
 - B42 -> M47 + M48 (+1 test case)
 - B15 -> M16 + M18 (+1 test case)
-- M34, M35, M37 are additional ONs (+3 test cases)
+- M34 and M35 are additional ONs (+2 test cases)
 
-#pagebreak()
+// #pagebreak()
 
 *After graph reduction*
 
-With my GPT and MONKE:
+// With my GPT and MONKE:
+// #table(
+//   columns: (auto, auto),
+//   [No.], [Test Case],
+//   [#1], [age: $[17, 17]$, service: $[29, 29]$],
+//   [#2], [age: $[59, 59]$, service: $[30, 30]$],
+//   [#3], [age: $(-infinity, 16]$, service: $[15, 28]$],
+//   [#4], [age: $[18, 18]$, service: $(-infinity, 13]$],
+//   [#5], [age: $[45, 59]$, service: $[31, infinity)$],
+//   [#6], [age: $(-infinity, 16]$, service: $[30, 30]$],
+//   [#7], [age: $[17, 17]$, service: $[31, infinity)$],
+//   [#8], [age: $[61, infinity)$, service: $[15, 28]$],
+//   [#9], [age: $[60, 60]$, service: $[29, 29]$],
+//   [#10], [age: $[18, 18]$, service: $[15, 15]$],
+//   [#11], [age: $[60, 60]$, service: $[30, 30]$],
+//   [#12], [age: $[60, 60]$, service: $[31, infinity)$],
+//   [#13], [age: $[18, 18]$, service: $[29, 29]$],
+//   [#14], [age: $[46, 58]$, service: $(-infinity, 28]$],
+//   [#15], [age: $[19, 44]$, service: $[31, infinity)$],
+//   [#16], [age: $[18, 18]$, service: $[30, 30]$],
+//   [#17], [age: $[44, 44]$, service: $[15, 15]$],
+//   [#18], [age: $[18, 44]$, service: $[14, 14]$],
+//   [#19], [age: $[44, 44]$, service: $[29, 29]$],
+//   [#20], [age: $[45, 45]$, service: $[29, 29]$],
+//   [#21], [age: $[19, 43]$, service: $[16, 28]$],
+//   [#22], [age: $[61, infinity)$, service: $[31, infinity)$],
+//   [#23], [age: $[59, 59]$, service: $[29, 29]$],
+// )
+
+With my GPT and Least Losing Edges:
+
 #table(
   columns: (auto, auto),
   [No.], [Test Case],
   [#1], [age: $[17, 17]$, service: $[29, 29]$],
-  [#2], [age: $[59, 59]$, service: $[30, 30]$],
+  [#2], [age: $[45, 45]$, service: $[29, 29]$],
   [#3], [age: $(-infinity, 16]$, service: $[15, 28]$],
-  [#4], [age: $[18, 18]$, service: $(-infinity, 13]$],
-  [#5], [age: $[45, 59]$, service: $[31, infinity)$],
-  [#6], [age: $(-infinity, 16]$, service: $[30, 30]$],
-  [#7], [age: $[17, 17]$, service: $[31, infinity)$],
-  [#8], [age: $[61, infinity)$, service: $[15, 28]$],
-  [#9], [age: $[60, 60]$, service: $[29, 29]$],
+  [#4], [age: $[18, 18]$, service: $[29, 29]$],
+  [#5], [age: $[46, 58]$, service: $[15, 28]$],
+  [#6], [age: $[17, 17]$, service: $[30, 30]$],
+  [#7], [age: $(-infinity, 16]$, service: $[31, infinity)$],
+  [#8], [age: $[44, 44]$, service: $[15, 15]$],
+  [#9], [age: $[44, 44]$, service: $[29, 29]$],
   [#10], [age: $[18, 18]$, service: $[15, 15]$],
-  [#11], [age: $[60, 60]$, service: $[30, 30]$],
-  [#12], [age: $[60, 60]$, service: $[31, infinity)$],
-  [#13], [age: $[18, 18]$, service: $[29, 29]$],
-  [#14], [age: $[46, 58]$, service: $(-infinity, 28]$],
-  [#15], [age: $[19, 44]$, service: $[31, infinity)$],
+  [#11], [age: $[59, 59]$, service: $[29, 29]$],
+  [#12], [age: $[18, 44]$, service: $[31, infinity)$],
+  [#13], [age: $[18, 44]$, service: $[14, 14]$],
+  [#14], [age: $[61, infinity)$, service: $[31, infinity)$],
+  [#15], [age: $[18, 44]$, service: $(-infinity, 13]$],
   [#16], [age: $[18, 18]$, service: $[30, 30]$],
-  [#17], [age: $[44, 44]$, service: $[15, 15]$],
-  [#18], [age: $[18, 44]$, service: $[14, 14]$],
-  [#19], [age: $[44, 44]$, service: $[29, 29]$],
-  [#20], [age: $[45, 45]$, service: $[29, 29]$],
-  [#21], [age: $[19, 43]$, service: $[16, 28]$],
-  [#22], [age: $[61, infinity)$, service: $[31, infinity)$],
-  [#23], [age: $[59, 59]$, service: $[29, 29]$],
+  [#17], [age: $[59, 59]$, service: $[30, 30]$],
+  [#18], [age: $[45, 58]$, service: $[31, infinity)$],
+  [#19], [age: $[60, 60]$, service: $[29, 29]$],
+  [#20], [age: $[60, 60]$, service: $[30, 30]$],
+  [#21], [age: $[61, infinity)$, service: $(-infinity, 28]$],
+  [#22], [age: $[19, 43]$, service: $[16, 28]$],
 )
 
-In the book, the number of reduced test cases is 18. This is 40.9% of the original 44 test set.
-
-My GPT with MONKE reduced the number of test cases to 23. This is 41.8% of the original test set.
+#pagebreak()
 
 *Conclusion*
 
-In conclusion, my GPT implementation generated all the test cases that were mentioned in the book. It also generated a few more test cases #todo[reason why this is good]. The graph reduction reduced the number of test cases by a similar percentage than the reduction in the book.
+In the book, the number of reduced test cases is 18. This is 40.9% of the original 44 test set.
+
+My GPT with MONKE reduced the number of test cases to 22. This is 40% of the original test set.
+
+In conclusion, my GPT implementation generated all the test cases that were mentioned in the book. It also generated a few more test cases, but most of them can be reduced with Graph Reduction. The graph reduction reduced the number of test cases by a similar percentage than the reduction in the book.
+
+*Hypothesis:* The 4 additional test cases in the reduced test set are because of M34, M35 (ONs), the breaking of B42 into M47 + M48, and breaking B15 into M16 + M18. These are additional test cases which weren't in the book and these NTuples (test cases) can't be intersected with other NTuples, so they remain in the reduced graph. We can see, that #8 is M34, #4 is M35. I couldn't really trace back the effect of B42 and B15.
 
 #pagebreak()
 

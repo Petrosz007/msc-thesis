@@ -24,12 +24,6 @@
 
 #include "chapters/introduction.typ"
 
-
-= Other test case generation methods
-== Equivalence Partitioning
-== Boundary Value Analysis
-== Random testing
-
 #include "chapters/intervals.typ"
 
 #include "chapters/gpt_algo.typ"

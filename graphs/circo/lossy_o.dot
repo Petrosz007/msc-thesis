@@ -1,8 +1,8 @@
 graph G {
-  a [label=""]
-  b [label=""]
-  c [label=""]
-  d [label=""]
+  a [label="[1,1]"]
+  b [label="[1,2]"]
+  c [label="[2,3]"]
+  d [label="[3,3]"]
 
   a -- b
   b -- c

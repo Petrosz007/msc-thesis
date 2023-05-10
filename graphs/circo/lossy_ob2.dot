@@ -1,7 +1,7 @@
 graph G {
-  a [label=""]
-  b [label=""]
-  c [label=""]
+  a [label="[1,1]"]
+  b [label="[2,2]"]
+  c [label="[3,3]"]
 
   a -- b [style=invis]
   b -- c [style=invis]
