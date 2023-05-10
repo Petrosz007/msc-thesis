@@ -33,3 +33,5 @@ Next I'll explain Equivalence Class Partitioning and Boundary Value Analysis in 
 
 == Test case generation
 
+#todo[Predicate errors: While programming, predicates can be written in many wrong ways. The numbers could be off-by-one #todo[Cite some off-by-one error paper], we could mistype the operator and have `>` instead of `<` or `<=`, write `!=` instead of `==`.]
+

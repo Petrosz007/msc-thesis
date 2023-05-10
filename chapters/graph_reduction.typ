@@ -100,7 +100,7 @@ With this, we can define some properties.
 3. If we have N nodes which all have edges between them, so it is a complete graph, they can be reduced down to one node. This comes from 1. and 2., because we only lose edges where not all nodes have edges to that node, but because we have a complete graph we don't lose edges.
 4. We can freely reduce nodes where after joining we retain all the edges.
 
-*Hypothesis:* There is an optimal way to reduce an asyclic component of nodes. The optimal way is to start joining nodes "from the edges", meaning, from nodes which only have one edge. We can trace back all acyclic components to the example with 4 nodes joined in a line in @optimal_join and @not_optimal_join.
+*Hypothesis:* There is an optimal way to reduce an acyclic component of nodes. The optimal way is to start joining nodes "from the edges", meaning, from nodes which only have one edge. We can trace back all acyclic components to the example with 4 nodes joined in a line in @optimal_join and @not_optimal_join.
 
 In the @optimal_join we're first joining edges from the ends. This means, that we only lose one edge when joining. In @not_optimal_join, when we are joining in the middle, we lose two edges. This is why my hypothesis is, that joining from the edges is a good strategy.
 
