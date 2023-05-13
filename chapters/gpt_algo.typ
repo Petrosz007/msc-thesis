@@ -60,9 +60,7 @@ In GPT we have more equivalence partitions:
   _Example:_ $[1,10)$ will have the OUT interval of $(-infinity,0.98]" "[10.01,infinity)$ \
   _Example:_ $(-infinity, 10]$ will have the OUT interval of $[10.02,infinity)$
 
-Each of these can detect a different kind of predicate error. Compared to BVA (which is just an (IN+ON+ININ) and (OFF+OUT) #todo[dunno, think about this this]) we have to have these different intervals, because we'll be reducing the test cases and intersecting intervals. If we were to just reduce BVA intervals we could "lose" some important test cases.
-
-_Example:_ In BVA the equivalence partitions of $[1, 10)$ would be $(-infinity, 1)" "[1, 10)" "[10, infinity)$. If we'd reduce for example the $[10, infinity)$ with $[20, infinity)$ we'd lose the 10 point, which would check the ON points. If we explicitly have the on points, they can't be reduced further (because they are a single point) and we'll have them in the final test cases.
+Each of these can detect a different kind of predicate error. Because of the one or two steps of precision, if there is an off-by-one error in the implementation (`>` instead of `>=` or the numbers are bigger or smaller) we can catch those.
 
 Here the IN interval and ON points are overlapping, why the "duplication"? Because in GPT when we create the OFF and OUT intervals we only do it for one variable at a time in a test case. That way we only test that that variable is handled correctly in the logic. All the other variables will have the IN intervals, so they are accepted.
 
@@ -120,7 +118,7 @@ The Cartesian products of this is:
 
 === Generating the OFF and OUT values for each variable in the NTuple
 
-OFF and OUT values should not be acceptable by the system under test (SUT). To test that they are indeed not accepted, we'll generate OFF and OUT values one variable at a time. All the other variables will have IN values.
+OFF and OUT values should not be acceptable by the SUT. To test that they are indeed not accepted, we'll generate OFF and OUT values one variable at a time. All the other variables will have IN values.
 
 Example for the previous NTuple:
 
@@ -138,7 +136,7 @@ OUT:
   z:  { x: (-Inf, 9.99], y: [0, 20], z: false }
 ```
 
-As you can see, OFF and OUT values can have multiple. As previously, we're taking the carthesian product of these products. In reality that means that we'll have two versions, because all the other IN values will be one value.
+As you can see, OFF and OUT values can have multiple values. As previously, we're taking the Cartesian product of these products. In reality that means that we'll have two versions, because all the other IN values will be one value.
 
 Note: in the algorithm the resulting OFF and OUT NTuples aren't labelled with which variable they were generated for, I put it there in this example to make it easier to see.
 

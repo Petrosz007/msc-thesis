@@ -158,6 +158,65 @@ This algorithm is also much more computationally expensive than MONKE, but a bit
 
 It has the same downside as LLNR, it only considers the one join, not the subsequent steps.
 
+== Least Losing Components
+
+#write_this[I guess this exists too lol]
+
 == Comparing the Graph Reduction Algorithms <gr-compare>
 
-#write_this[Write this]
+For the benchmark I've used a 2020 MacBook Pro with 16Gb or RAM. I've used cargo-instrument #todo[cite/footnote https://github.com/cmyr/cargo-instruments] that uses XCode Instruments #todo[Footnote/cite https://help.apple.com/instruments/mac/10.0/#/] for profiling.
+
+Number of test cases: 328
+Number of edges in initial graph: 11684
+complex_small.gpt
+
+```cpp
+var x: num
+var y: num
+var z: num
+
+if(x != 1 || y != 1 || z != 1)
+else if(x != 2 || y != 2 || z != 2)
+else
+
+if(x != 10 || y != 20)
+else if(x != 2)
+else
+```
+
+#todo[create and run a (seeded) random MONKE, just for fun]
+
+#let asd = (
+  ("baseline", "0.028s", "328"),
+  ("MONKE", "0.031s", "51"),
+  ("MLE", "3.07s", "71"),
+  ("LLE", "26.46s", "46"),
+  ("LLC", "130.8s", "54"),
+  ("LLNR", "216.60s", "53"),
+)
+
+Number of test cases: 452
+Number of edges in initial graph: 23664
+complex_medium.gpt
+
+```cpp
+var x: num
+var y: num
+var z: num
+
+if(x != 1 || y != 1 || z != 1)
+else if(x != 2 || y != 2 || z != 2)
+else
+
+if(x != 10 || y != 20)
+else if(x != 2)
+else if(z == 3)
+else
+```
+
+#let complex_medium = (
+  ("baseline", "0.066s", "452"),
+  ("MONKE", "0.084s", "69"),
+  ("MLE", "11.91s", "98"),
+  ("LLE", "113.4s", "58"),
+)
