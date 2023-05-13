@@ -1,6 +1,6 @@
 #import "../utils.typ": *
 
-= Graph Reduction
+= Graph Reduction <graph-reduction>
 == What is Graph Reduction?
 
 When GPT generates test cases, it generates an interval (or boolean value) for variables. This means, that the discrete test points should come from those intervals. But there could be a case when multiple test cases would have intersecting intervals. For example:
@@ -17,7 +17,7 @@ In this example, the intersection of T1 and T2 is `{x: [0, 5)}` and the intersec
 
 === NTuple intersection
 
-First, I'll have to clarify, that booleans only intersect when their values are the same. So `true` intersects with `true`, and `false` with `false`. This can be derived from intervals, for example if `true` is $[0,0]$ and `false` is $[1,1]$. This method can also be applied to Enums (which is a future improvement idea, as detailed in #todo[link future improvement chapter about enums]).
+First, I'll have to clarify, that booleans only intersect when their values are the same. So `true` intersects with `true`, and `false` with `false`. This can be derived from intervals, for example if `true` is $[0,0]$ and `false` is $[1,1]$. This method can also be applied to Enums (which is a future improvement idea, as detailed in @future-enums).
 
 Two NTuples intersect, when all of their variables intersect. If a varible is not present in an NTuple, we treat it as if it could take all the possible values. In practise this means, that we just use the value of that variable from the other NTuple.
 
@@ -160,4 +160,4 @@ It has the same downside as LLNR, it only considers the one join, not the subseq
 
 == Comparing the Graph Reduction Algorithms <gr-compare>
 
-#todo[write this]
+#write_this[Write this]

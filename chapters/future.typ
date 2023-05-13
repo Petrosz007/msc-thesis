@@ -4,7 +4,7 @@
 
 == Coincidental Correctness
 
-Hierons, R. M. has shown in @coincidentalCorrecttness, that because BVA only generates single points on boundaries, geometric shifts in boundaries can lead to accidental correctness. In other words, there are some incorrect implementations, which cannot be caught with BVA.
+Hierons, R. M. has shown @coincidentalCorrecttness, that because BVA only generates single points on boundaries, geometric shifts in boundaries can lead to accidental correctness. In other words, there are some incorrect implementations, which cannot be caught with BVA.
 
 Consider the following example: Write a program that accepts a point as an $(x,y)$ coordinate, $x$ and $y$ are integers. Return true, if the point is above the $f(x) = 0$ function's slope, otherwise return false.
 
@@ -19,9 +19,11 @@ You can notice, that we don't reference x here, so the generated test cases won'
 
 The problem with this, is that if the implementation checked against the $f(x) = x$ function's slope, all of our test cases would still pass. This is, because in the $x = 0$ point both $f(x) = 0$ and $f(x) = x$ behave in the same way. But we know that checking against $f(x) = x$ would be an incorrect implementation.
 
-The following figure shows the two functions, $f(x) = 0$ in green and $f(x) = x$ in orange. In this scenario the test points A, B, C, and D see that both functions behave in the same way. But point E and F could show the bug, because they are both under the slope of $f(x) = x$.
+@coincidental-correctness-example shows the two functions, $f(x) = 0$ in green and $f(x) = x$ in orange. In this scenario the test points A, B, C, and D see that both functions behave in the same way. But point E and F could show the bug, because they are both under the slope of $f(x) = x$.
 
-#align(center, image("../images/2023-04-17-22-40-15.png", height: 20%))
+#align(center)[
+  #figure(image("../images/2023-04-17-22-40-15.png", height: 20%), caption: [Coincidental Correctness example]) <coincidental-correctness-example>
+]
 
 #pagebreak()
 
@@ -89,6 +91,10 @@ Because we've differed from the equivalence partitions that we've defined our GP
 
 This is related to the Competent Programmer hypothesis #todo[link], because we don't want to test implementations that are vastly different or more overcomplicated than a simple solution. In this case, the else if, the nested if and additional `||` made this implementation more complex.
 
-== Supporting enums in GPT Lang
+== Supporting enums in GPT Lang <future-enums>
 
-#todo[write this]
+== Supporting Strings
+
+There has been research about extending BVA to strings @jain2010boundary. This approach could be investigated further, as it would let us use GPT in even more situations.
+
+#write_this[write this]

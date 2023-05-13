@@ -1,6 +1,6 @@
 #import "../utils.typ" : *
 
-= Intervals
+= Intervals <intervals>
 
 Intervals are the backbone of GPT. Instead of assigning single point to Equivalence Partitions, we use intervals. This way we can represent every possible value that we want to test our predicates with.
 

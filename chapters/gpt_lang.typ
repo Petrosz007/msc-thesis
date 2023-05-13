@@ -1,6 +1,6 @@
 #import "../utils.typ" : *
 
-= GPT Lang
+= GPT Lang <gpt-lang>
 So far, we've looked at GPT as a test generation technique. The other power of my GPT implementation is that I've developed a Domain Specific Lanuage (DSL) for defining requirements for GPT. From this DSL GPT can generate test cases. This makes the test generation process much faster. It is called GPT Lang.
 
 GPT Lang has a C inspired syntax, to make it easier for developers to learn. Because for GPT we are only concerned with predicates, we can only write conditions in this DSL.
@@ -12,7 +12,7 @@ var vip: bool
 var price: num(0.01)
 var second_hand_price: int
 
-if(VIP == true && price < 50) {
+if(vip == true && price < 50) {
   if(second_hand_price == 2)
   if(second_hand_price in [6,8])
 }
@@ -28,12 +28,12 @@ As you can see, GPT Lang looks similar to how we will actually implement our pro
 
 You can currently do the following things in GPT Lang:
 - Declare variables with boolean or number types (optionally with precision)
-- Declare `if`, `else if`, and `else` statements, with an optional body that can have other `if` statements. They can have any number of conditions.
-- Declare conditions, which can be
-  - Boolean true or false
+- Declare `if`, `else if`, and `else` statements, with an optional body that can have other `if` statements. They can have any number of predicates.
+- Declare predicates, which can be
+  - Boolean `true` or `false`
   - Number $>, >=, <, <=, ==, !=$ constant
   - Number `in` or `not in` interval
-- Conditions can be negated with `!`, grouped with parenthasies `(` `)`, conjuncted with `&&` or disjuncted with `||`.
+- Predicates can be negated with `!`, grouped with parenthasies `(` `)`, conjuncted with `&&` or disjuncted with `||`.
 
 == Syntax
 
@@ -73,18 +73,19 @@ Where
 
 Example: `(-Inf, 0]`, `[2.3, 6.75)`, `[1,1]`
 
-*Condition*
+*Predicate*
 
-Conditions represent #todo[something]
+Predicates repesent a comparison between variables and constants, they can either get evaluated to true or false.
 
-Boolean condition: \
+Boolean predicate: \
 `<var_name> <op> <true|false>` or `<true|false> <op> <var_name>` \
 Where `<op>` is `==` or `!=`
 
-Binary number condition: \
-`<var_name> <op> <constant>` or `<constant> <op> <var_name>`
+Binary number predicate: \
+`<var_name> <op> <constant>` or `<constant> <op> <var_name>` \
+Where `<op>` is `<`, `>`, `<=`, `>=`, `==`, or `!=`
 
-Interval condition: \
+Interval predicate: \
 `<var_name> <in|not in> <interval>`
 
 #todo[Give examples here for conditions]
@@ -98,4 +99,4 @@ Interval condition: \
 
 == Flattening the IR
 
-== Converting disjunctions to conjunctions
+== Converting disjunctions to conjunctions <or-to-ands>

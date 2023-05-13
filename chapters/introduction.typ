@@ -2,78 +2,35 @@
 
 = Introduction
 
-#todo[Review this before finalizing everything, all of this should be present in the thesis]
+#write_this[write this. write about testing, automatic test generation, GPT and predicate errors]
 
-In this thesis I'll introduce my automatic test case generation algorithm, which uses General Predicate Testing proposed by Kovacs Attila and Forgacs Istvan @thebook. I'll outline the current state-of-the-art black box testing strategies, what their advantages and disadvantages are. I'll explain what GPT is, how it works in theory, and how I put it into practice. I'll show my proposed Domain Specific Language for formalizing the predicates of requirements. I'll show how this automatic test generation scales much better than the current state-of-the-art manual test generation techniques.
+== Motivation
 
-== Common testing practices
+#write_this[write this]
 
-Software testing is an essential part of the software development life cycle. Testing software allows us to be confident, that the program adheres to the requirements and works as expected. There can be functional and non-functional requirements, in this thesis I'll focus on functional requirements.
+== Methodology
 
-There are multiple approaches to testing software, one is Black Box testing, where we create tests sets from the requirement specifications. In practice, this means that we're not looking at how to code is written when writing tests. This way we can systematically test the correctness of outputs for given inputs @murnane2001effectiveness.
+In this thesis, my main task was to create an implementation of the GPT algorithm. As the book only outlined how to do GPT manually, I had to come up with ways to make an automatic and algorithmic solution.
 
-The state-of-the-art black box testing methods are: @nidhra2012black @khan2012comparative @thebook
+First, I had to implement proper interval handling, as there weren't any available libraries that handled intervals this way. In @intervals I'll show how I implemented my own simple- and multiintervals.
 
-1. _Equivalence Partitioning_: The input and output domains can be partitioned in a way, that values in each partition belong to the same Equivalence Class. This way, test cases are only required to have one value from each partition.
-2. _Boundary Value Analysis_: Test cases are created from the boundaries of Equivalence Classes. These can be the values just below, on, or just above the boundaries. This can catch usual off-by-one errors.
-3. _Fuzzing_: Black-box fuzz testing is about taking valid inputs and randomly mutating them to try to find implementation bugs. This approach has low code-coverage and requires lot of test cases. @godefroid2007random There is also white-box fuzzing, which is much more effective, due to having access to the source code. @godefroid2008automated
-4. _Cause-Effect Graph_: We create a graph and creating links between the effect and its causes. There are four types of these links: indentity, negation, logic OR, and logical AND. There are some proposed automatic test generation tools from Cause-Effect Graphs @son2014test.
-5. _Orthogonal Array Testing_: OAT is a pairwise testing technique used when the input domain is small, but testing all the possible combinations of inputs whould result in a too large test set. @Rao2009Jul
-6. _All Pair Testing_: All the unique pairs of inputs are in the test case set. This way all the possible pairs are tested, but the test set is quite large.
-7. _State Transition Testing_: Used for state machines or User Interfaces, the transitions between states are tested.
+Next, when I had working intervals, I had to implement the GPT algorithm. This went through a few iterations. In the first version I could create NTuples by hand and run the GPT test case generation algorithm on it, which generated a non-reduced set of test cases.
 
-In this thesis we'll assume, that the input variables are independent. Otherwise domain analysis has to be used #todo[cite Beizer 1983, Binder 1999, Forgács and Kovács 2019].
+But creating NTuples by hand is quite some manual work, so I implemented a CSV like structure for formalising requirements. It was a bit easier and a more user friendly way to use GPT. I also created a web page for it that others could use.
 
-Next I'll explain Equivalence Partitioning and Boundary Value Analysis in more detail, as GPT is based on those.
+#align(center)[
+  #figure(image("../images/2023-05-13-18-52-39.png"), caption: [CSV like GPT Lang])
+]
 
-=== Equivalence Partitioning
+This was a pretty bare-bones solution, it was a bit hard to write and reason about requirements in this format. This is why I created GPT Lang, which I'll detail in @gpt-lang. I had to experiment with and design a DSL, that was easy to write and reason about, was familiar to programmers, but still adhered to black box testing principles. I wrote a parser, designed an AST and an IR, and then transformed the IR to NTuples that GPT could use.
 
-In Equivalence Partitioning the inputs are divided into equivalence classes in a way, that if two inputs belong to the same class they behave in the same way during testing. If both inputs test the same behavior, then if there is a bug, they can both detect it @thebook.
+ Because GPT Lang could resemble source code, one could think that we could extend it to analyse source code and generate test cases in a white box way. But as detailed in the next chapters, I explicitly wanted to avoid that and GPT Lang is by-design only for black box testing.
 
-The equivalence classes are not-empty, disjoint, and the union of the equivalence classes cover the entire input domain. Equivalence classes are also referred to as partitions.
+Now I had a user-friendly DSL for writing specifications in, but one pain point was, that the original GPT algorithm was only detailed for conjunctive forms. Disjunctions are an essential part of requirements and programming, so I wanted to research how I could make disjunctions work with GPT. In @or-to-ands I detail this procedure. This is a great lift for GPT, as now the test designers don't have to think about how to bring conjunctive forms to disjunctive forms, my program would handle that automatically. It not only saves time, but reduces the risk of human error.
 
-The partitions can be either valid or invalid partitions. Valid partitions contain the acceptable values, invalid partitions contain the not acceptable values. A value is acceptable if the predicate returns a logical true value. 
+After that, I've researched how the number of test cases can be reduced in an algorithmic way. In @graph-reduction I detail how I abstracted this problem to be about graph reduction, and what different graph reduction algorithms I came up with. Graph Reduction is as essential part of GPT, it reduces the number of test cases needed by orders of magnitude. This was also a pretty hard procedure to do manually for GPT, so automation can save even more time for the test designers.
 
-The steps of Equivalence Partitioning @thebook:
-1. Identify the input domain
-2. Partition the domain into valid and invalid
-3. Refine and merge the partitions until they can't be merged any more
-4. Validate the partitioning
+In @validation I'll validate that my implementation is correct and generates the test cases outlined in the book. This section also provides examples about how GPT works and what errors it can catch.
 
-Once we have the partitions, we can create test sets, by creating a test case for each partition.
-
-It is possible to obtain the partitioning data without actually doing the partitioning @thebook. We can select the domain boundaries and use the boundaries to approximate the partitions. As the borers are easier to compute than the entire partitions, and we can generate test cases from these borders, this is a good approximate solution for equivalence partitioning.
-
-=== Boundary Value Analysis
-
-In most cases, potential bugs occur near the border of equivalence partitions, because of programmer error @thebook. As such, we should select test cases from the partitions to test these boundaries.
-
-Boundary Value Analaysis builds on Equivalence Partitioning and proposes ways to select test points from the partitions.
-
-We can select the following points when analyzing boundary values:
-
-#todo[re-create this image]
-#figure(image("../images/2023-05-10-18-58-54.png"), caption: "EP with closed or open boundaries")
-
-*Predicate errors:* While programming, predicates can be written in many wrong ways. The numbers could be off-by-one #todo[Cite some off-by-one error paper], we could mistype the operator and have `>` instead of `<` or `<=`, write `!=` instead of `==`.
-
-BVA helps detect predicate errors, because these most often occur at borders of partitions. If we have correctly selected test cases to cover all the borders of partition, we will correctly detect these predicate errors.
-
-As Forgács and Kovács detailed, BVA is easy when we have one parameter, but once we have multiple parameters it becomes significantly harder @thebook.
-
-== Automatic test case generation
-
-Generating test cases automatically is advantageous, because creating test cases manually takes up a significant amount of time and is prone to human error. 
-
-White box testing solutions have had many automatic test generation algorithms, because they have access to the source code and can base the tests upon something. #todo[cite something here]. 
-
-Black box testing solutions have a harder time generating test automatically, beause they are derived from the specifications and requirements. Human language is hard to parse and even harder to extract test cases from #todo[cite something]. With the recent advances of Generative Pre-trained Transformer models, maybe this will change, but current solutions are prone to hallucinations #todo[cite something], and thus we can't rely on them to generate correct test cases.
-
-#todo[link some other black box automatic test case generation tools]
-
-To generate test cases automatically, black box solutions have to use some kind of intermediary format to generate the tests from. Test designers have to convert the requirements to one of these formats. For example cause-effect graphs.
-
-There are currently no ways to automatically generate test cases with BVA #todo[cite something]. As it is a manual process, it takes up a lot of time and is prone to error.
-
-My GPT solution is novel in that sense, as automatic BVA solutions haven't been created yet. Because GPT builds on BVA.
+After the summary in @summary, I'll talk about some future research and implementation ideas in @future.
 

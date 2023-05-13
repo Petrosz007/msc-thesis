@@ -22,7 +22,13 @@
   biblography_file: "works.bib"
 )
 
+#include "chapters/abstract.typ"
+
+#include "chapters/terminology.typ"
+
 #include "chapters/introduction.typ"
+
+#include "chapters/black_box.typ"
 
 #include "chapters/intervals.typ"
 
@@ -37,6 +43,8 @@
 = Code architecture
 == Rust
 == Frontend app, webassembly
+
+#include "chapters/summary.typ"
 
 #include "chapters/future.typ"
 

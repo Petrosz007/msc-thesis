@@ -26,14 +26,11 @@ _Example:_ For the predicate `x != true`, we will have `false`.
 An interesting case happens, when we take the not equal to predicate. For $x != 10$ we have to generate a multiinterval, because the values $x$ could take is $(-infinity,10)" "(10,infinity)$.
 
 === Extending BVA
-Now that we have intervals to work with, we should generate the possible test values. In normal BVA we would pick single points from the intervals. GPT extends this in two ways: 
+Now that we have intervals to work with, we should generate the equivalence partitions and select the possible test values. In normal BVA we do the partitioning and select single points from the intervals. 
 
-1. We don't pick single values, but the the largest possible intervals. This will be helpful, when in the end we try to reduce the number of test cases, we can see the overlap between different test cases.
-2. We not only look at the minimum and maximum possible acceptable value, but more. We look at not acceptable values and test that our implementation properly fails for those. #todo[This might be covered in BVA, further investigation needed.]
+GPT extends this: We don't pick single values, but the the largest possible intervals for the partitions. This will be helpful, when in the end we try to reduce the number of test cases, because we can see the overlap between different test cases. This ultimately helps us reduce the number or test cases required to test the same equivalence partitions.
 
-#todo[Actually, GPT is an implementation of BVA with some extra functionalities, right?]
-
-=== Equivalence Partitioning in GPT
+=== Equivalence Partitioning in GPT <ep-in-gpt>
 In BVA the equivalence partitions for $[1, 10)$ would be $(-infinity, 1)" "[1, 10)" "[10, infinity)$
 
 In GPT we have more equivalence partitions:
@@ -61,9 +58,9 @@ In GPT we have more equivalence partitions:
 - *OUT:* Not acceptable values, except for the OFF points. The complement of the IN interval, stepped one, to exclude the OFF points.
 
   _Example:_ $[1,10)$ will have the OUT interval of $(-infinity,0.98]" "[10.01,infinity)$ \
-  _Example:_ $(-infinity, 10]$ will have the OUT interval of $[10.01,infinity)$
+  _Example:_ $(-infinity, 10]$ will have the OUT interval of $[10.02,infinity)$
 
-Each of these can detect a different kind of predicate error. Compared to BVA (which is just an (IN+ON+ININ) and (OFF+OUT)) we have to have these different intervals, because we'll be reducing the test cases and intersecting intervals. If we were to just reduce BVA intervals we could "lose" some important test cases.
+Each of these can detect a different kind of predicate error. Compared to BVA (which is just an (IN+ON+ININ) and (OFF+OUT) #todo[dunno, think about this this]) we have to have these different intervals, because we'll be reducing the test cases and intersecting intervals. If we were to just reduce BVA intervals we could "lose" some important test cases.
 
 _Example:_ In BVA the equivalence partitions of $[1, 10)$ would be $(-infinity, 1)" "[1, 10)" "[10, infinity)$. If we'd reduce for example the $[10, infinity)$ with $[20, infinity)$ we'd lose the 10 point, which would check the ON points. If we explicitly have the on points, they can't be reduced further (because they are a single point) and we'll have them in the final test cases.
 
@@ -85,7 +82,7 @@ Let's look at each of those steps in detail:
 
 An NTuple is a tuple with N elements. In GPT I use the term NTuple for a map of the variable names to the EPs. This is because of historical reasons, originally these were literal tuples, but working with an explicit variable to EP mapping is easier to handle during graph reduction.
 
-In GPT we can inly create NTuples from a condition that only contains conjunctions. I'll explain how to convert a condition with disjunctions to conjunctive forms in a later chapter. #todo[ref that chapter.]
+In GPT we can inly create NTuples from a condition that only contains conjunctions. I'll explain how to convert a condition with disjunctions to conjunctive forms in @or-to-ands.
 
 Example: The condition $x < 10$ && $y$ in $[0, 20]$ && $z ==$ true would become the following NTuple:
 ```
@@ -123,10 +120,32 @@ The Cartesian products of this is:
 
 === Generating the OFF and OUT values for each variable in the NTuple
 
+OFF and OUT values should not be acceptable by the system under test (SUT). To test that they are indeed not accepted, we'll generate OFF and OUT values one variable at a time. All the other variables will have IN values.
+
+Example for the previous NTuple:
+
+```
+OFF: 
+  x:  { x: 10, y: [0, 20], z: true }
+  y1: { x: (-Inf, 9.99], y: -0.01, z: true }
+  y2: { x: (-Inf, 9.99], y: 20.01, z: true }
+  z:  { x: (-Inf, 9.99], y: [0, 20], z: false }
+
+OUT:
+  x:  { x: [10.01, Inf), y: [0, 20], z: true }
+  y1: { x: (-Inf, 9.99], y: (-Inf, -0.02], z: true }
+  y2: { x: (-Inf, 9.99], y: [20.02, Inf), z: true }
+  z:  { x: (-Inf, 9.99], y: [0, 20], z: false }
+```
+
+As you can see, OFF and OUT values can have multiple. As previously, we're taking the carthesian product of these products. In reality that means that we'll have two versions, because all the other IN values will be one value.
+
+Note: in the algorithm the resulting OFF and OUT NTuples aren't labelled with which variable they were generated for, I put it there in this example to make it easier to see.
+
 == Test value concretization in GPT
 
 Test cases in GPT hold intervals of values for the variables. Programs need concrete values for variables to run test cases. To do this, we can just select either endpoint of the interval and that'll be a good test point. Test cases from GPT will always be closed intervals so we can safely use those numbers. An exception is unbounded intervals, where we have to use the bounded part of that interval. If the interval is $(-infinity, infinity)$ we can choose $0$.
 
 == Hierarchical GPT
 
-#todo[Finish this]
+#write_this[write about HGPT]
