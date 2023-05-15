@@ -1,4 +1,5 @@
 #import "../utils.typ": *
+#import "../libs/notes.typ": note, display
 
 = Graph Reduction <graph-reduction>
 == What is Graph Reduction?
@@ -158,65 +159,166 @@ This algorithm is also much more computationally expensive than MONKE, but a bit
 
 It has the same downside as LLNR, it only considers the one join, not the subsequent steps.
 
+=== Most Losing Edges
+
+A variation of the LLE algorithm is the Most Losing Edges (MLE) algorithm. It works the exact same way as LLE, but when selecting the edge to join, it'll select the one with the highest weight.
+
+This algorithm is absolutely not practical, but is a good frame of reference for the other algorithms. We can approximate how good a reduction is by looking at a "worst case" reduction.
+
+*Hypothesis:* MLE approximates the worst case of Graph Reduction. It'll always try to join edges which'll lose the most edges, which are probably bad joins.
+
 == Least Losing Components
 
 #write_this[I guess this exists too lol]
 
+#pagebreak(weak: true)
+
 == Comparing the Graph Reduction Algorithms <gr-compare>
 
-For the benchmark I've used a 2020 MacBook Pro with 16Gb or RAM. I've used cargo-instrument #todo[cite/footnote https://github.com/cmyr/cargo-instruments] that uses XCode Instruments #todo[Footnote/cite https://help.apple.com/instruments/mac/10.0/#/] for profiling.
+For the benchmark I've used a 2020 Apple M1 MacBook Pro with 16Gb or RAM. I've used cargo-instrument @cargoInstruments that uses XCode Instruments @xcodeInstruments for profiling.
 
-Number of test cases: 328
-Number of edges in initial graph: 11684
-complex_small.gpt
+The baseline runs represent the baseline, when no graph reduction is done. It is needed, because I measured the whole runtime of the program, which includes parsing the GPT Lang source file, creating the NTuples, and creating the initial graph. To get the runtime of only the algorithms, you can subtract the baseline runtime from the runtime.
 
-```cpp
-var x: num
-var y: num
-var z: num
+How to read the results:
+- The 'Runtime' show the total runtime of the program in seconds (s) or milliseconds (ms). Lower is better.
+- The 'No. of Test Cases' columns shows the reduced number of test cases. Lower is better.
+- The '%' columns show the reduction percentage. Higher is better.
+- The table is ordered by runtime in ascending order.
+- When comparing percentages I use percentage points (pp for short).
 
-if(x != 1 || y != 1 || z != 1)
-else if(x != 2 || y != 2 || z != 2)
-else
+#let benchmark_table(xs) = [
+  === #xs.file
+  GPT Lang code can be found in #ref(label(xs.file + "-code"))
 
-if(x != 10 || y != 20)
-else if(x != 2)
-else
-```
+  Number of non-reduced test cases: #xs.og_test_cases \
+  Number of edges in the initial graph: #xs.edges
+  
+  #align(center,
+    figure(
+      table(
+        columns: (15%, 15%, 20%, 10%),
+        [*Algo*], [*Runtime*], [*No.\ Test Cases*], [*%*],
+        ..xs.table_data.map(x => {
+          let (algo, time, count) = x
+          ([#algo], [#time], [#count], 
+           [#calc.round((1 - (count / xs.og_test_cases)) * 100.0, digits: 2)%])
+        }).flatten()
+      ),
+      caption: [#xs.file benchmark results]
+    )
+  )
+]
 
-#todo[create and run a (seeded) random MONKE, just for fun]
-
-#let asd = (
-  ("baseline", "0.028s", "328"),
-  ("MONKE", "0.031s", "51"),
-  ("MLE", "3.07s", "71"),
-  ("LLE", "26.46s", "46"),
-  ("LLC", "130.8s", "54"),
-  ("LLNR", "216.60s", "53"),
+#let price_calculation = (
+  file: "price_calculation.gpt",
+  og_test_cases: 14,
+  edges: 39,
+  table_data: (
+    ("baseline", "1ms", 14),
+    ("MONKE", "3ms", 8),
+    ("MLE", "3ms", 9),
+    ("LLE", "3ms", 8),
+    ("LLNR", "3ms", 8),
+    ("LLC", "4ms", 8),
+  )
 )
 
-Number of test cases: 452
-Number of edges in initial graph: 23664
-complex_medium.gpt
+#benchmark_table(price_calculation)
 
-```cpp
-var x: num
-var y: num
-var z: num
+Price Calculation is a really simple example, with a tiny graph of 39 edges. All the algorithms reduce to the same number of test cases, except for MLE, as expected.
 
-if(x != 1 || y != 1 || z != 1)
-else if(x != 2 || y != 2 || z != 2)
-else
+The runtime is also similar, because of the small graph.
 
-if(x != 10 || y != 20)
-else if(x != 2)
-else if(z == 3)
-else
-```
+
+#pagebreak(weak: true)
+
+#let paid_vacation_days = (
+  file: "paid_vacation_days.gpt",
+  og_test_cases: 55,
+  edges: 183,
+  table_data: (
+    ("baseline", "3ms", 55),
+    ("MONKE", "3ms", 22),
+    ("MLE", "5ms", 29),
+    ("LLE", "9ms", 22),
+    ("LLC", "49ms", 24),
+    ("LLNR", "57ms", 22),
+  )
+)
+
+#benchmark_table(paid_vacation_days)
+
+This graph is almost 4.7 times the Price Calculation graph. Now we can start to see a difference between the number of test cases. MONKE, LLE, and LLNR produce the best reduction. LLC can't reduce that well with 3.64 pp behind. MLE is the worst, as expected. But it is worth noting, that MLE could still reduce the graph almost by half and is 12.73 pp behind the best.
+
+We can see the exponential factor coming in for LLC and LLNR. Their runtimes are an order of magnitude worse than the other algorithms.
+
+
+#let complex_small = (
+  file: "complex_small.gpt",
+  og_test_cases: 328,
+  edges: 11684,
+  table_data: (
+    ("baseline", "0.028s", 328),
+    ("MONKE", "0.031s", 51),
+    ("MLE", "3.11s", 71),
+    ("LLE", "26.84s", 45),
+    ("LLC", "130.80s", 54),
+    ("LLNR", "216.60s", 53),
+  )
+)
+
+#benchmark_table(complex_small)
+
+Here we make the jump from 189 edges to 11 684 edges and the difference is striking. The runtime of MONKE is still around the baseline at 31ms, but we can see that MLE is a 100 times slower, LLE is 865 times slower, LLC is 4219, and LLNR is 6967 slower. The exponential scaling difference can be clearly seen in these results.
+
+The difference between the reductions may seem significant at first. LLE has the best reduction, and while MONKE may seem to have 10% more test cases than LLE, the overall reduction from the starting 328 test cases is just 1.83 pp. With MONKE being almost 3 orders of magnitude faster, this 1.83 pp difference is not that much in comparison.
+
+It is also interesting to see, that MLE has 1.5 times as many test cases as LLE, but the overall difference between reduction is 7.93 pp.
+
 
 #let complex_medium = (
-  ("baseline", "0.066s", "452"),
-  ("MONKE", "0.084s", "69"),
-  ("MLE", "11.91s", "98"),
-  ("LLE", "113.4s", "58"),
+  file: "complex_medium.gpt",
+  og_test_cases: 452,
+  edges: 23664,
+  table_data: (
+    ("baseline", "0.066s", 452),
+    ("MONKE", "0.084s", 69),
+    ("MLE", "11.19s", 99),
+    ("LLE", "111.00s", 58),
+  )
 )
+
+#benchmark_table(complex_medium)
+
+Because of the exponential scaling of LLC and LLNR I wasn't able to run them, because they'd take too much time.
+
+In this benchmark the number of edges in the graph is doubled. The relative difference between the results is similar to the previous example. LLE is 1321 times slower than MONKE. MONKE also starts to drift from the baseline, meaning that scaling starts to kick in as well.
+
+There is a 2.44 pp difference between MONKE and LLE.
+
+
+#let complex_hard = (
+  file: "complex_hard.gpt",
+  og_test_cases: 3657,
+  edges: 1229629,
+  table_data: (
+    ("baseline", "47.37s", 3657),
+    ("MONKE", "153.00s", 354),
+  )
+)
+
+#benchmark_table(complex_hard)
+
+Because of the exponential scaling of the other algorithms I could only run MONKE in a reasonable amount of time.
+
+In this example the 1.2 million edges in the graph is quite a big jump from the 22 thousand previously. It shows on MONKE's runtime as well.
+
+From the profiling information I saw that 108 sec was spent removing the nodes from the graph. If we subtract the baseline from MONKE's runtime, that's most of the runtime. A future improvement idea would be to find a Graph structure that has low costed node removal, while also keeping the node joining performance, so neighbor lookup and edge addition is fast. 
+
+=== Summary
+
+From these benchmarks we could see, that MONKE is the most performant and the second best reducing algorithm. In reduction per seconds of runtime it is the best algorithm.
+
+MLE achieving 78% reduction also supports my hypothesis, that there is likely no absolutely wrong way to join nodes that would affect the end result of the reduction in very significant ways. There are certainly better ways and heuristics to use when reducing, as we can see with LLE. The test designers should decide how much time are they willing to spend waiting for test case generation, with the benefit of having a more reduced test set.
+
+In the last example the number of test cases have been reduced to a tenth of the baseline. This shows the power and usefulness of graph reduction. There is quite a difference between having to run 3657 versus 354 test cases, when they cover the exact same equivalence partitions.

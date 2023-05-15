@@ -4,3 +4,6 @@ Multiintervals
 NTuple
 MONKE
 NTuples
+MLE
+LLE
+LLNR

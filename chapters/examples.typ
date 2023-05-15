@@ -23,7 +23,7 @@ Display the vacation days. The ages are integers and calculated with respect to 
 
 Let's look at the if statements one by one and compare the generated test cases. Note: this is without graph reduction. The test cases from the book will have an ID starting with B, my GPT implementation will have an M prefix.
 
-The full GPT Lang definition can be found in @paid-vacation-days-code.
+The full GPT Lang definition can be found in @paid_vacation_days.gpt-code.
 
 #pagebreak()
 
