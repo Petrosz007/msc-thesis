@@ -118,7 +118,7 @@ MONKE works in a very simple way: We take the list of edges in the graph, always
 
 Suprisingly, this algorithm works quite well, as we'll see in @gr-compare.
 
-*Hypothesis:* If there was a seriously wrong way to join nodes, as in, lose a lot of nodes that other joins could retain, MONKE wouldn't work that well. Because MONKE is essentially a random algorithm, it wouldn't give optimal results. Therefore, my hypothesis is, that there are no completely wrong joins that can be made. Yes, as we've seen in the previous section, there are ways to have an optimal reduction, but suboptimal reductions are rare.
+*Hypothesis:* If there was a seriously wrong way to join nodes, as in, lose a lot of nodes that other joins could retain, MONKE wouldn't work that well. Because MONKE is essentially a random algorithm, it wouldn't give optimal results. Therefore, my hypothesis is, that there are no completely wrong joins that can be made. Yes, as we've seen in the previous section, there are ways to have an optimal reduction, but totally bad reductions are rare.
 
 == Least Losing Nodes Reachable
 
@@ -181,7 +181,7 @@ The baseline runs represent the baseline, when no graph reduction is done. It is
 
 How to read the results:
 - The 'Runtime' show the total runtime of the program in seconds (s) or milliseconds (ms). Lower is better.
-- The 'No. of Test Cases' columns shows the reduced number of test cases. Lower is better.
+- The 'Num. of Test Cases' columns shows the reduced number of test cases. Lower is better.
 - The '%' columns show the reduction percentage. Higher is better.
 - The table is ordered by runtime in ascending order.
 - When comparing percentages I use percentage points (pp for short).
@@ -197,7 +197,7 @@ How to read the results:
     figure(
       table(
         columns: (15%, 15%, 20%, 10%),
-        [*Algo*], [*Runtime*], [*No.\ Test Cases*], [*%*],
+        [*Algo*], [*Runtime*], [*Num. of\ Test Cases*], [*%*],
         ..xs.table_data.map(x => {
           let (algo, time, count) = x
           ([#algo], [#time], [#count], 

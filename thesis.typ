@@ -40,9 +40,7 @@
 
 #include "chapters/examples.typ"
 
-= Code architecture
-== Rust
-== Frontend app, webassembly
+#include "chapters/code_architecture.typ"
 
 #include "chapters/summary.typ"
 

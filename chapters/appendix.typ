@@ -48,6 +48,8 @@ if(service >= 15 && age < 45 && age >= 18 && service < 30)
 if(age >= 45 && service < 30 && age < 60)
 ```
 
+#pagebreak(weak: true)
+
 == Price Calculation <price_calculation.gpt-code>
 ```cpp
 /*
@@ -88,6 +90,8 @@ if(x != 10 || y != 20)
 else if(x != 2)
 else
 ```
+
+#pagebreak(weak: true)
 
 == complex_medium.gpt <complex_medium.gpt-code>
 ```cpp

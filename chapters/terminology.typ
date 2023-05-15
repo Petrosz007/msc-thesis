@@ -10,6 +10,11 @@
   ("EP", "Equivalence Partitioning"),
   ("SUT", "System Under Test"),
   ("DSL", "Domain Specific Language"),
+  ("LLE", "Least Losing Edges"),
+  ("MLE", "Most Losing Edges"),
+  ("MONKE", todo[what is monke short for]),
+  ("LLNR", "Least Losing Nodes Reachable"),
+  ("LLC", "Least Losing Components"),
   // ("", ""),
 ).sorted(key: x => x.at(0))
 

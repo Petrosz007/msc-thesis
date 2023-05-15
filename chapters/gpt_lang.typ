@@ -88,15 +88,21 @@ Where `<op>` is `<`, `>`, `<=`, `>=`, `==`, or `!=`
 Interval predicate: \
 `<var_name> <in|not in> <interval>`
 
-#todo[Give examples here for conditions]
+#write_this[Give examples here for conditions]
 
-#todo[Give example about && || () and !()]
+#write_this[Give example about && || () and !()]
 
 == Parsing to the AST
-
+#write_this[write about the parser and the AST]
 
 == Converting the AST to IR
 
+#write_this[Write about the IR and how to convert from AST to IR]
+
 == Flattening the IR
 
+#write_this[How to flatten the IR, handle negations, flattenning ands and ors]
+
 == Converting disjunctions to conjunctions <or-to-ands>
+
+#write_this[how disjunctions (and any condition and IR) can be brought to conjunctive forms]
