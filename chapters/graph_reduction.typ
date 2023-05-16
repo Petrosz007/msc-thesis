@@ -167,9 +167,25 @@ This algorithm is absolutely not practical, but is a good frame of reference for
 
 *Hypothesis:* MLE approximates the worst case of Graph Reduction. It'll always try to join edges which'll lose the most edges, which are probably bad joins.
 
+#pagebreak(weak: true)
+
 == Least Losing Components
 
-#write_this[I guess this exists too lol]
+The heuristic for Least Losing Components (LLC) is that after each join we don't want the graph to split into a lot of components. If our graph splits into components, we can't join nodes in different components. If the graph stays in the fewest number of components, the potential for joins could be there.
+
+The idea behind this algorithm is similar to Least Losing Nodes Reachable, we want to make optimal joins first.
+
+The algorithm works similarly as Least Losing Nodes Reachable. It assigns a weight to each edge with the following steps:
+
+1. Count the number of components in the graph.
+2. Copy the graph and join the nodes on the edge. Count how many components are in the copied graph.
+3. See how many new components would be in the graph due to the join.
+
+We calculate the weights of all the edges. We join the edge with the smallest weight (least losing components). After a join, all the edge weigths have to be recalculated, because subsequent joins could affect the edges differently, than the number we calculated.
+
+This algorithm is very computationally expensive. For each join we have to simulate all the joins (Same as LLNR), but we only have to count the number of components in the graph, which is a costly operation.
+
+It has the same downside as LLNR, it only considers the one join, not the subsequent steps.
 
 #pagebreak(weak: true)
 

@@ -93,8 +93,10 @@ This is related to the Competent Programmer hypothesis #todo[link], because we d
 
 == Supporting enums in GPT Lang <future-enums>
 
+Enums could be modelled like booleans for BVA. The only operators we need to support is `==` and `!=`. For `!=` we can create a list of all the other enum values. When intersecting NTuples we intersect the sets of these possible enum values.
+
+Enums would let us model some behaviors. For example, when we have a function that does a database query, we could model it as `SUCCESS | TIMEOUT | CONNECTION_ERROR`. This is basically equivalence partitioning the results of any functions.
+
 == Supporting Strings
 
-There has been research about extending BVA to strings @jain2010boundary. This approach could be investigated further, as it would let us use GPT in even more situations.
-
-#write_this[write this]
+There has been research about extending BVA to strings @jain2010boundary. This approach could be investigated further, as it would let us use GPT in even more situations. Handling strings is an indispensable part of programs, so having an automatic test generation solution for them could be very useful.
