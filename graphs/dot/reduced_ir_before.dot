@@ -1,0 +1,41 @@
+graph {
+  // x > 0 && (x < 10 && y < 10 || x > 20 && y > 10 || z == 0) && y == 2 && z > 20
+  a [label="&&"]
+  b [label="x > 0"]
+  c [label="&&"]
+
+  d [label="||"]
+  e [label="&&"]
+  f [label="x < 10"]
+  g [label="y < 10"]
+  h [label="||"]
+  i [label="&&"]
+  j [label="x > 20"]
+  k [label="y > 20"]
+  l [label="z == 0"]
+
+  x [label="&&"]
+  y [label="y == 2"]
+  z [label="z > 20"]
+
+  a -- b
+  a -- c
+
+  c -- d
+  c -- x
+
+  x -- y
+  x -- z
+
+  d -- e
+  d -- h
+
+  e -- f
+  e -- g
+
+  h -- i
+  h -- l
+
+  i -- j
+  i -- k
+}

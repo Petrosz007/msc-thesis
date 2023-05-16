@@ -93,16 +93,171 @@ Interval predicate: \
 #write_this[Give example about && || () and !()]
 
 == Parsing to the AST
-#write_this[write about the parser and the AST]
+
+The AST of GPT Lang is the simple representation of the syntax. As it is a syntax tree, it has a tree structure with different nodes.
+
+There are two main nodes: `VarNode` and `IfNode`.
+
+`VarNode` hold a variable declaration. It has the variable name and it's type.
+
+`IfNode` has it's own conditions as a `ConditionNode`, the body which contains a list of `IfNode`, a list of `ElseIfNodes` and an `ElseNode`.
+
+`ConditionNode` is an ADT with three variants:
+- A negated `ConditionNode`.
+- An expression, which holds a single predicate.
+- A group of expressions, with a left and right-hand side and an operand which is `||` or `&&`.
+
+The parser is implemented using parser combinators. The output of the parser is this AST.
 
 == Converting the AST to IR
 
-#write_this[Write about the IR and how to convert from AST to IR]
+The AST is only a representation of the GPT Lang code. That structure can be brought to a simpler form. We can also condense the condition structure, which will be the Reduced IR.
+
+The IR has a similar structure for conditions. When we convert from the AST to IR we handle the if and else if nodes, the body of if statements and in the IR we will only handle list of conditions.
+
+These are the steps to convert an `IfNode`:
+1. Convert the if's conditions to IR conditions.
+2. For the body, traverse recursively, take that result and conjunct the if's conditions to it.
+3. For the else if nodes, conjunct the top level conditions so far and conjunct the negated version to the else ifs conditions.
+4. For the body of else ifs and the else statement, evaluate them recusively and condjunct the negated previous conditions onto them.
+
+Example:
+
+```cpp
+if(x == 1) {
+  if(y == 2)
+  if(y == 3)
+} else if(x < 10)
+else {
+  if(z == 0)
+}
+```
+
+In this case, from the body of the first ifs we'll have 
+```cpp
+x == 1
+x == 1 && y == 2
+x == 1 && y == 3
+```
+
+After that, we take go to the else if. To get to that else if, the previous condition had to be false, so we conjunct that to the condition:
+```cpp
+!(x == 1) && x < 10 
+```
+
+To get to the else statement, both the if and the else if had to be false. We also append these to it's body, so we'll have:
+```cpp
+!(x == 1) && !(x < 10)
+!(x == 1) && !(x < 10) && z == 0
+```
+
+In total, we'll have:
+```cpp
+x == 1
+x == 1 && y == 2
+x == 1 && y == 3
+!(x == 1) && x < 10
+!(x == 1) && !(x < 10)
+!(x == 1) && !(x < 10) && z == 0
+```
+
+Each of these lines is one Condition node inside the IR.
 
 == Flattening the IR
 
-#write_this[How to flatten the IR, handle negations, flattenning ands and ors]
+As you can see from the previous example, they could be reduced by a bit. This is where the Reduced IR comes in.
+
+The IR is traversed recursively as a tree. When we have a negation node, we'll return the negated version of the condition node inside.
+- The negation of negation nodes is the node itself
+- The negation of expressions is the negation of the expression. This is defined for intervals, for booleans we swap `true` to `false` and `false` to `true`.
+- For grouped expressions, we swap the operator (`||` to `&&` and `&&` to `||`) and we negate both the left and right-hand sides. We evaluate them recursively. We can do this because of De Morgan's laws.
+
+After this there are no negation nodes in the IR.
+
+Next, we'll flatten the expressions. Currently, they are stored in a binary tree. But a conjunction chain or disjunction chain can exist, where we have $n$ elements, all of which are either all conjuncted or disjuncted. Our goal is to have a form, where if we have an `&&` node, it'll have any number of child nodes, but those child nodes are either single expressions or an `||` node. Same for the `||` node, it can only have simple expressions or `&&` nodes as children.
+
+#pagebreak(weak: true)
+
+*Example:*
+Let's look at the following formula:
+```cpp
+x > 0 && (x < 10 && y < 10 || x > 20 && y > 10 || z == 0) && y == 2 && z > 20
+```
+#figure(image("../graphs/dot/reduced_ir_before.dot.png", width: 80%), caption: [Before reduction])
+#figure(image("../graphs/dot/reduced_ir_after.dot.png", width: 80%), caption: [After reduction])
+
+As you can see, after the reduction we have an n-ary tree, where `&&`s only have simple predicates or `||` as children, and `||`s only have simple predicates or `&&`s as children. For reference, I'll call this an AND-OR tree.
+
 
 == Converting disjunctions to conjunctions <or-to-ands>
 
-#write_this[how disjunctions (and any condition and IR) can be brought to conjunctive forms]
+Converting disjunctions to conjunctions is in my opinion one of the most important features I've come up with for GPT. The GPT algorithm is only defined for conditions where the predicates are conjuncted. But in the real world we rarely use only conjunctions, we have to use dijunctions as well.
+
+There is a way to create conjunctions from disjunctions. If we think about it, when programs evaluate `x || y`, they always have an order of operations. Most programming languages today first evaluate `x`, if it true they stop and say that this conditions is true. If `x` is false, they evaluate `y`. We can use this order of operation to define two conjunctions: `x` and `!x && y`. If we write test cases for these two conjunctions it is the same as if we tested `x || y`. Now we can use GPT on these.
+
+We need to make a slight adjustment for this. Because we are black box testing, we can't assume anything about the implementation. This includes the order in which the `||` is evaluated in or how the programmer implements it. Implementing `x || y` should have the same meaning as `y || x`, if we are testing idempotent pure functions that have no side effects.
+
+*Example:* If we only generate test cases for `x` and `!x && y` and the programmer implements `y || x`, we don't test the case when only `y` is true or `!y && x`.
+
+Based on this we can say, that we want to take the linear combination of the conditions inside a disjunction and generate all possible combinations.
+
+*Example:* Let's look at the disjunctions generated for `x || y || z`:
+```
+x
+!x && y
+!x && !y && z
+!x && z
+!x && !z && y
+y
+!y && x
+!y && z
+!y && !z && x
+z
+!z && x
+!z && y
+```
+
+As you can see, we didn't generate `!z && !x && y`, because we've already generated `!x && !z && y` and these would semantically be the same, the order of elements can be switched around in conjunctions. This is also why z has fewer cases, because they've been generated previously.
+
+This method is applied recursively, because we could have `&&` conditions inside `||`s. Also, when we have an `&&` condition with an `||` sub-condition, the linear combinations are generated 'in their place', the 'outer context' will remain the same.
+
+#pagebreak(weak: true)
+
+*Example:* `x && (y || z) && w`
+```
+x && y && w
+x && !y && z && w
+x && z && w
+x && !z && y && w
+```
+
+In this case, the 'outer context' had one element. But what if it consisted of multiple variations, because they were `||`s too? We have to take the Cartesian product of those variations.
+
+*Example:* `(a || b) && (c || d)`
+```
+a && c
+a && !c && d
+a && d
+a && !d && c
+!a && b && c
+!a && b && !c && d
+!a && b && d
+!a && b && !d && c
+b && c
+b && !c && d
+b && d
+b && !d && c
+!b && a && c
+!b && a && !c && d
+!b && a && d
+!b && a && !d && c
+```
+
+You can see, that this is the Cartesian product of if we had generated `a || b` and `c || d` separately.
+
+Because of the recursive nature of these methods, they can be applied to any deep and wide AND-OR tree.
+
+The downside of this method is that it generates a huge amount of conditions and in turn test cases. But this is the price we pay for black box testing. This way we can guarantee that the implementation can have the predicates inside the `||`s in any order, we'll have a test case for it. And because our end goal is to make sure that we that the program adheres to the requirements, this is the correct approach.
+
+This code could be modified, that it doesn't generate all the variable orders for `||`s. The test designer and programmer could agree on the order of the variables and that'd reduce the number of test cases if needed. Later it could cause regressions if the variable order is changed, so this is not recommended.
+

@@ -15,6 +15,7 @@
   ("MONKE", todo[what is monke short for]),
   ("LLNR", "Least Losing Nodes Reachable"),
   ("LLC", "Least Losing Components"),
+  ("ADT", "Algebraic Data Type"),
   // ("", ""),
 ).sorted(key: x => x.at(0))
 
