@@ -112,7 +112,7 @@ Components with more than 4 nodes exhibit the same behavior. There are also case
 
 == MONKE
 
-MONKE stands for Minimal Overhead Node Kollision Elliminator. This means, that this algorithm has little to no heuristics (no overhead) and it elliminates kolliding (intersecting) nodes, A.K.A. joining them.
+MONKE stands for Minimal Overhead Node Kollision Elliminator. This means, that this algorithm has little to no heuristics (no overhead) and it elliminates kolliding (colliding, intersecting) nodes, A.K.A. joining them.
 
 MONKE works in a very simple way: We take the list of edges in the graph, always take one and join the nodes on the edge. Repeat, until there are no edges in the graph.
 

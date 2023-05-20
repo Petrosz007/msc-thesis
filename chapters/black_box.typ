@@ -48,8 +48,7 @@ Boundary Value Analaysis builds on Equivalence Partitioning and proposes ways to
 
 Forgács and Kovács state, that "many textbooks, blogs, software testing courses suggest inappropriate BVA solutions." @thebook[p. 74]. They propose the following method for selecting test values from equvivalence partitions:
 
-#todo[re-create this image]
-#figure(image("../images/2023-05-10-18-58-54.png"), caption: "EP with closed or open boundaries")
+#figure(image("../images/2023-05-10-18-58-54.png"), caption: [EP with closed or open boundaries @thebook[p. 75]])
 
 These IN, ON, OFF, OUT points will be important, as equivalence partitioning in GPT builds on this (detailed in @ep-in-gpt) 
 
