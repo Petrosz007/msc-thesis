@@ -18,7 +18,7 @@ The state-of-the-art black box testing methods are: @nidhra2012black @khan2012co
 6. _All Pair Testing_: All the unique pairs of inputs are in the test case set. This way all the possible pairs are tested, but the test set is quite large.
 7. _State Transition Testing_: Used for state machines or User Interfaces, the transitions between states are tested.
 
-In this thesis we'll assume, that the input variables are independent. Otherwise domain analysis has to be used #todo[cite Beizer 1983, Binder 1999, Forgács and Kovács 2019].
+In this thesis we'll assume, that the input variables are independent. Otherwise domain analysis has to be used @Beizer1983-xr @Binder1999-kg @Forgacs2019-vr.
 
 Next I'll explain Equivalence Partitioning and Boundary Value Analysis in more detail, as GPT is based on those.
 
@@ -48,7 +48,7 @@ Boundary Value Analaysis builds on Equivalence Partitioning and proposes ways to
 
 Forgács and Kovács state, that "many textbooks, blogs, software testing courses suggest inappropriate BVA solutions." @thebook[p. 74]. They propose the following method for selecting test values from equvivalence partitions:
 
-#figure(image("../images/2023-05-10-18-58-54.png"), caption: [EP with closed or open boundaries @thebook[p. 75]])
+#figure(image("../images/ep_boundary.png"), caption: [EP with closed or open boundaries @thebook[p. 75]])
 
 These IN, ON, OFF, OUT points will be important, as equivalence partitioning in GPT builds on this (detailed in @ep-in-gpt) 
 
@@ -57,6 +57,16 @@ These IN, ON, OFF, OUT points will be important, as equivalence partitioning in 
 BVA helps detect predicate errors, because these most often occur at borders of partitions. If we have correctly selected test cases to cover all the borders of partition, we will correctly detect these predicate errors.
 
 As Forgács and Kovács detailed, BVA is easy when we have one parameter, but once we have multiple parameters it becomes significantly harder @thebook.
+
+== Competent Programmer Hypothesis <CPH>
+
+The Competent Programmer Hypothesis is: "Programmers create programs that are close to being correct, i.e., the specification and the appropriate code are close to each other." @thebook
+
+Let's look at an example. We have to create a function that tests if $x < 0$, $x$ is an integer. We can implement it as `x < 0` and have the test cases $-100, -1, 0, 1, 100$ to test it.
+
+Let's say, that somebody implements this as `x < 5 && x != 4 && x != 3 && x != 2 && x != 1 && x != 0`. For integers, this implementation is correct, but it is needlessly complicated, and it is far from the specification. In this case, if the programmer makes a predicate error in `x < 5` and writes `x < 6`, the function will return `true` for $5$, meaning `5 < 0`. Our original test cases didn't have this test point, so we wouldn't catch this bug. 
+
+It can be seen, that programs could be infinitely complicated this way. We can't possibly test all possible predicate errors in every possible implementation. With CPH, we say that the implementation will be close to the specification, so it is enough to only test predicate errors, which would happen in an implementation close to the specification.
 
 == Automatic test case generation
 

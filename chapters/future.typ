@@ -35,7 +35,7 @@ _Example:_ $i < j + 1$
 
 == Different equivalence partitions for implementations
 
-When implementing a program, if we differ by some, we might unkowingly create an implementation that has different equivalence partitions.
+When implementing a program, if we differ by some, we might unknowingly create an implementation that has different equivalence partitions.
 
 Example:
 
@@ -81,7 +81,7 @@ function paidVacationDays(age, service) {
 }
 ```
 
-In the second implementation, if we replace that `age >= 45` with any number in $[46,59]$ the original tests in #todo[link chapter of paid vacations] still all pass. But we know for sure that we've made an error, because we've replaced that number.
+In the second implementation, if we replace that `age >= 45` with any number in $[46,59]$ the original tests in @paid-vacation-days-final-reduced-test-cases still all pass. But we know for sure that we've made an error, because we've replaced that number.
 
 An example test case for this error would be `{age: [46, 59], service: (-Inf, 14]}`.
 
@@ -89,7 +89,7 @@ This is, because this implementation has different equivalence partitions. In th
 
 Because we've differed from the equivalence partitions that we've defined our GPT Lang definition with, the way we can solve this is to create another GPT Lang definition for this implementation. This way, we'll have a test case that covers the `service >= 15 || age >= 45` condition, which didn't exist in the original one.
 
-This is related to the Competent Programmer hypothesis #todo[link], because we don't want to test implementations that are vastly different or more overcomplicated than a simple solution. In this case, the else if, the nested if and additional `||` made this implementation more complex.
+This is related to the Competent Programmer Hypothesis defined in @CPH, because we don't want to test implementations that are vastly different or more overcomplicated than a simple solution. In this case, the else if, the nested if and additional `||` made this implementation more complex.
 
 == Supporting enums in GPT Lang <future-enums>
 
@@ -100,3 +100,7 @@ Enums would let us model some behaviors. For example, when we have a function th
 == Supporting Strings
 
 There has been research about extending BVA to strings @jain2010boundary. This approach could be investigated further, as it would let us use GPT in even more situations. Handling strings is an indispensable part of programs, so having an automatic test generation solution for them could be very useful.
+
+== Hierarchical GPT
+
+#write_this[write about HGPT]

@@ -28,12 +28,14 @@ As you can see, GPT Lang looks similar to how we will actually implement our pro
 
 You can currently do the following things in GPT Lang:
 - Declare variables with boolean or number types (optionally with precision)
-- Declare `if`, `else if`, and `else` statements, with an optional body that can have other `if` statements. They can have any number of predicates.
+- Declare `if`, `else if`, and `else` statements, with optional bodies that can have other `if` statements. They can have any number of predicates.
 - Declare predicates, which can be
   - Boolean `true` or `false`
   - Number $>, >=, <, <=, ==, !=$ constant
   - Number `in` or `not in` interval
 - Predicates can be negated with `!`, grouped with parenthasies `(` `)`, conjuncted with `&&` or disjuncted with `||`.
+
+#pagebreak(weak: true)
 
 == Syntax
 
@@ -88,9 +90,9 @@ Where `<op>` is `<`, `>`, `<=`, `>=`, `==`, or `!=`
 Interval predicate: \
 `<var_name> <in|not in> <interval>`
 
-#write_this[Give examples here for conditions]
+#write_this[Conditions, with && || () and !()]
 
-#write_this[Give example about && || () and !()]
+#write_this[if, else if, else]
 
 == Parsing to the AST
 

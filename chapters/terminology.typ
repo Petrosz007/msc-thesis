@@ -16,6 +16,7 @@
   ("LLNR", "Least Losing Nodes Reachable"),
   ("LLC", "Least Losing Components"),
   ("ADT", "Algebraic Data Type"),
+  ("CPH", "Competent Programmer Hypothesis"),
   // ("", ""),
 ).sorted(key: x => x.at(0))
 

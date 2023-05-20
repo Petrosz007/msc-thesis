@@ -17,7 +17,6 @@
 
 = Appendix
 == Planned Vacation Days <paid_vacation_days.gpt-code>
-#todo[This might need to be updated]
 ```cpp
 /*
 Paid vacation days

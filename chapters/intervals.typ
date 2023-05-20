@@ -4,13 +4,11 @@
 
 Intervals are the backbone of GPT. Instead of assigning single point to Equivalence Partitions, we use intervals. This way we can represent every possible value that we want to test our predicates with.
 
-There weren't any off-the-shelf libraries that implemented interval handling exactly in the way I needed, so I had to create my own interval library. It consists of two main parts: Simple intervals and what I call Multiintervals. Multiintervals are made up of multiple simple intervals, but behave as an interval. 
+There weren't any off-the-shelf libraries that implemented interval handling exactly in the way I needed, so I had to create my own interval library. It consists of two main parts: Simple intervals and what I call Multiintervals. Multiintervals are made up of multiple simple intervals, but behave as an interval. `intervals-general` @rust-intervals-general had good simple interval support, but no multiinterval support.
 
 I will use the word interval both for simple intervals, or multiintervals. If a distinction needs to be made, I'll clarify. But in later chapters all that'll matter is that we are working with an interval.
 
 This interval implementation has three important functions: intersection, union, and complement. With these I could implement all of GPT's functionality.
-
-#todo[There was one Rust lib that had pretty good single intervals]
 
 == Simple Intervals
 
@@ -26,7 +24,7 @@ An interval can only be constructed if $"lo" <= "hi"$.
 
 For the implementation, I'm only sotring the lo_boundary, lo, hi, hi_boundary variables. All the calculations are made with these values.
 
-#todo[A design alternative could be to represent all the possible states interval could be in in an Algebraic Data Type, so we cannot create inconsistent state, like $[-infinity, infinity]$ or $(10, 10]$]
+A design alternative could be to represent all the possible states interval could be in in an Algebraic Data Type, so we cannot create inconsistent state, like $[-infinity, infinity]$ or $(10, 10]$
 
 #pagebreak()
 
@@ -58,13 +56,12 @@ In all other cases the intervals would intersect.
 
 Pseudocode for calculating the intersection of two intervals `self` and `other`:
 
-#todo[Here we need a lo_cmp and a hi_cmp instead of the > or <, because if they have the same value the boundary makes the difference. Also, when comparing intervals (for intersection, union, or complement) it would make the cases more explicit.]
 ```py
-if self doesn't intersects_with other:
-  return No Intersection
+if not self.intersects_with(other):
+  return "No Intersection"
 
-interval_with_lower_hi = if self.hi > other.hi then self else other
-interval_with_higher_lo = if self.lo < other.lo then self else other
+interval_with_lower_hi = if self.hi_cmp(other) == Greater then self else other
+interval_with_higher_lo = if self.lo_cmp(other) == Less then self else other
 
 return Interval {
   lo_boundary: interval_with_higher_lo.lo_boundary
@@ -76,7 +73,7 @@ return Interval {
 
 First we check if the intervals can even be intersected. If they don't, we return that there is no intersection. In Rust this is an `Option::None` type, in other languages it might be a `null`.
 
-Then, if the intervals can be intersected, we look for the hi endpoint which is lower and use that as the hi point and hi boundary. We do the same and look for higher lo point and use that as a lo point. 
+Then, if the intervals can be intersected, we look for the hi endpoint which is lower and use that as the hi point and hi boundary. We do the same and look for higher lo point and use that as a lo point. `hi_cmp` and `lo_cmp` are functions which take the boundaries into account. It is needed, because there could be a case where we compare $5)$ and $5]$, in that case the closed boundary is higher.
 
 === Union
 
@@ -92,7 +89,32 @@ We can just create a multiinterval from the two intervals. With this constructor
 
 === Complement
 
-#todo[There is no `inverse` defined for Simple intervals lol. (I only needed complements for Multiintervals and that doesn't need the complements of simple intervals to work)]
+The complement of an interval contains all the elements which are not in the interval.
+
+For simple intervals, this could result in a multiinterval. For example, the complement of $[0, 10)$ is $(-infinity, 0)" "(10, infinity)$. 
+
+For simple intervals, we basically have a side left of the interval and a side right of the interval. If our interval is unbounded, we won't have that side in the complement. The complement of $(-infinity, infinity)$ is an empty multiinterval.
+
+```py
+if self.is_empty():
+  return (-infinity, infinity)
+
+
+new_intervals = []
+
+if self.lo != -infinity:
+  new_intervals += Interval(Open, -infinity, self.lo, self.lo_boundary.inverse())
+
+
+if self.hi != infinity:
+    new_intervals += Interval(self.hi_boundary.inverse(), self.hi, infinity, Open)
+
+MultiInterval {
+    intervals: new_intervals
+}
+```
+
+#pagebreak()
 
 == Multiintervals 
 
@@ -137,7 +159,9 @@ for x in self.intervals:
 return false
 ```
 
-#todo[Because the intervals are in increasing order, we could do an $O(n)$ algorithm instead of an $O(n^2)$]
+As a future optimisation idea,  we could do an $O(2n)$ algorithm instead of an $O(n^2)$, because the intervals are in increasing order. We could traverse and them like in a two-pointers problem.
+
+#pagebreak()
 
 *Calculating the intersection*
 
