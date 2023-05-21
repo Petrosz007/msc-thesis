@@ -1,4 +1,6 @@
-    #let title_page(title, author, supervisor, university, date) = {
+#let title_page(title, author, supervisor, university, date) = {
+  set page(numbering: none)
+
   // Title row
   grid(columns: (20%, 80%),
     image(university.logo),
@@ -43,13 +45,7 @@
   set page(
     paper: "a4",
     margin: (left: 35mm, right: 25mm, top: 25mm, bottom: 25mm),
-    // TODO: This is currently bugged, the outline won't respect those numbers
-    // Page numbers will start from one less, because the title page doesn't count
-    // numbering: (num, body) => if num == 1 { "" } else { str(num - 1) },
-    numbering: (..nums) => {
-      let num = nums.pos().at(0);
-      if num == 1 { "" } else { str(num) }
-    },
+    numbering: "1",
     number-align: center,
   )
 
