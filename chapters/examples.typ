@@ -580,3 +580,24 @@ The following tables (@mutation-testing1, @mutation-testing2, @mutation-testing3
 //   [#7], [prepaid_with_credit_card: `false`, price: $[100.1, 100.1]$, weight: $[5, infinity)$], [],
 //   [#8], [price: $(-infinity, 99.9]$, weight: $[5.1, infinity)$], [],
 // )
+
+== Comparison to BWDM
+
+In a paper about BWDM @BWDM2022, there are two example functions, which I can test in GPT as well. They are written in VDM++, but the if structure can be converted to GPT Lang.
+
+*Evaluate Grades*
+
+The code can be found in @evaluate_grades.gpt-code.
+
+- BWDM's BVA had generated 14 test cases. 
+- My GPT with MONKE generated 15 test cases.
+
+*Quarter*
+
+The code can be found in @quarter.gpt-code.
+
+- BWDM's BVA had generated 12 test cases. 
+- My GPT with MONKE generated 11.
+
+Their paper didn't list all of the test cases, so I couldn't compare the actual test values. But, my GPT implementations generates around the same number of test cases. These are small functions, but in the future it'd be worth to test more complex functions, where there are orders of magnitude more test cases, to see if the GPT algorithm combined with Graph reduction makes a difference.
+

@@ -126,3 +126,88 @@ else if(x != 3 && y != 3 && z != 3)
 else if(x != 4 && y != 4 && z != 4)
 else
 ```
+
+== Evaluate Grades <evaluate_grades.gpt-code>
+
+```cpp
+/*
+Original requirements in VDM++:
+
+class GradeEvaluation
+  functions
+  evaluateGrades : nat -> seq of char
+  evaluateGrades (point) ==
+    if(point >= 60) then
+      if(point >= 70) then
+        if(point >= 80) then
+          if(point >= 90) then
+            "A"
+          else
+            "B"
+        else
+          "C"
+      else
+        "D"
+    else
+      "F"
+  pre point <= 100;
+end GradeEvaluatio
+*/
+
+var point: int
+
+if(point <= 100)
+
+if(point >= 60) {
+  if(point >= 70) {
+    if(point >= 80) {
+      if(point >= 90) {
+        // "A"
+      } else
+        // "B"
+    } else
+      // "C"
+  } else
+    // "D"
+} else
+  // "F"
+```
+
+== Quarter <quarter.gpt-code>
+
+```cpp
+/*
+Original requirements in VDM++:
+
+class Quarter
+types
+  public MONTH = nat1
+  inv m == m <= 12;
+functions
+  determineQuarter : MONTH -> seq of char
+  determineQuarter (month) ==
+    if(month <= 3) then
+      "Q1"
+    else
+      if(month <= 6) then
+        "Q2"
+      else
+        if(month <= 9) then
+          "Q3"
+        else
+          "Q4";
+end Quarter
+*/
+var month: int
+
+if(month <= 12)
+
+if(month <= 3)
+  // "Q1"
+else if(month <= 6)
+  // "Q2"
+else if(month <= 9)
+  // "Q3"
+else
+  // "Q4";
+```

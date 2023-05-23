@@ -1,0 +1,1 @@
+{"rule":"DT_JJ_NO_NOUN","sentence":"^\\QI'll show how GPT could be implemented and automated,creating a one-of-a-kind  \n]\\E$"}
