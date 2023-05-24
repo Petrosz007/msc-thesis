@@ -103,4 +103,6 @@ There has been research about extending BVA to strings @jain2010boundary. This a
 
 == Hierarchical GPT
 
-#write_this[write about HGPT]
+Hierarchical GPT is a concept, where our requirements have sequential parts, hierarchies. There could be a first part which uses the variables `a, b, c` and a second part which uses `c, d, e`. If we were to generate test cases with `a, b, c, d, e` our initial graph would have a lot of edges.
+
+The idea is, that these separate parts can be generated independently of each other, reduced independently, and the test cases would be joined in the end. This would reduce the complexity of graph reduction and avoid the combinatorial explosion. #todo[Check if this is correct (this won't overflow if I delete this todo)]

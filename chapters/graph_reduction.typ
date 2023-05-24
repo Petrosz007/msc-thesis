@@ -204,8 +204,12 @@ How to read the results:
 - The table is ordered by runtime in ascending order.
 - When comparing percentages I use percentage points (pp for short).
 
-#let benchmark_table(xs) = [
-  === #xs.file
+#let benchmark_table(xs, label_str: none) = [
+  #if label_str != none [
+    #heading(xs.file, level: 3) #label(label_str)
+  ] else [
+    === #xs.file
+  ]
   GPT Lang code can be found in #ref(label(xs.file + "-code"))
 
   Number of non-reduced test cases: #xs.og_test_cases \
@@ -325,7 +329,7 @@ There is a 2.44 pp difference between MONKE and LLE.
   )
 )
 
-#benchmark_table(complex_hard)
+#benchmark_table(complex_hard, label_str: "complex-hard-chapter")
 
 Because of the exponential scaling of the other algorithms I could only run MONKE in a reasonable amount of time.
 

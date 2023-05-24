@@ -127,6 +127,8 @@ else if(x != 4 && y != 4 && z != 4)
 else
 ```
 
+#pagebreak()
+
 == Evaluate Grades <evaluate_grades.gpt-code>
 
 ```cpp
@@ -172,6 +174,8 @@ if(point >= 60) {
 } else
   // "F"
 ```
+
+#pagebreak()
 
 == Quarter <quarter.gpt-code>
 
