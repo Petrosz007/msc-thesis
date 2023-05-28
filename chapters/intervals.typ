@@ -42,7 +42,7 @@ case3 = other.lo == self.hi && (other.lo_boundary == Open || self.hi_boundary ==
 return !(case1 || case2 || case3)
 ```
 
-Here, we are looking at the case when the intervals don't intersect, because that is an easier case to handle. We can negate this result to get whther intervals intersect.
+Here, we are looking at the case when the intervals don't intersect, because that is an easier case to handle. We can negate this result to get whether intervals intersect.
 
 - `case1` is when the intervals are above or below each other, like $[0, 10]$ and $[20, 30]$ or $[20, 30]$ and $[0, 10]$. Because _lo_ $<=$ _hi_, we only have to check the _lo_ and _hi_ of the two intervals.
 
@@ -160,7 +160,7 @@ for x in self.intervals:
 return false
 ```
 
-As a future optimisation idea,  we could do an $O(2n)$ algorithm instead of an $O(n^2)$, because the intervals are in increasing order. We could traverse them like in a two pointers technique @TwoPointers.
+As a future optimisation idea, we could do an $O(2n)$ algorithm instead of an $O(n^2)$, because the intervals are in increasing order. We could traverse them like in a two pointers technique @TwoPointers.
 
 #pagebreak()
 

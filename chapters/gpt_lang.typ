@@ -33,7 +33,7 @@ Currently, GPT Lang has the following functionality:
   - Boolean `true` or `false`
   - Number $>, >=, <, <=, ==, !=$ constant
   - Number `in` or `not in` interval
-- Predicates can be negated with the prefix operator `!`, grouped with parenthasies `(` `)`, conjuncted with `&&` or disjuncted with `||`.
+- Predicates can be negated with the prefix operator `!`, grouped with parentheses `(` `)`, conjoined with `&&` or disjointed with `||`.
 
 #pagebreak(weak: true)
 
@@ -222,7 +222,7 @@ The IR is traversed recursively as a tree. When we have a negation node, we'll r
 
 After this reduction, there will be no negation nodes in the IR.
 
-Next, we'll flatten the expressions. Currently, they are stored in a binary tree. But a conjunction chain or disjunction chain can exist, where we have $n$ elements, all of which are either all conjuncted or disjuncted. Our goal is to have a form, where if we have an `&&` node, it'll have any number of child nodes, but those child nodes are either single expressions or an `||` node. Same for the `||` node, it can only have simple expressions or `&&` nodes as children.
+Next, we'll flatten the expressions. Currently, they are stored in a binary tree. But a conjunction chain or disjunction chain can exist, where we have $n$ elements, all of which are either all conjoined or disjointed. Our goal is to have a form, where if we have an `&&` node, it'll have any number of child nodes, but those child nodes are either single expressions or an `||` node. Same for the `||` node, it can only have simple expressions or `&&` nodes as children.
 
 #pagebreak(weak: true)
 
@@ -239,7 +239,7 @@ As you can see, after the reduction we have an n-ary tree, where `&&`s only have
 
 == Converting disjunctions to conjunctions <or-to-ands>
 
-Converting disjunctions to conjunctions is in my opinion one of the most important features I've come up with for GPT. The GPT algorithm is only defined for conditions where the predicates are conjoined. But in the real world, we rarely use only conjunctions, we have to use dijunctions as well.
+Converting disjunctions to conjunctions is in my opinion one of the most important features I've come up with for GPT. The GPT algorithm is only defined for conditions where the predicates are conjoined. But in the real world, we rarely use only conjunctions, we have to use disjunctions as well.
 
 There is a way to create conjunctions from disjunctions. If we think about it, when programs evaluate `x || y`, they always have an order of operations. Most programming languages today first evaluate `x`, if it is true, they stop and evaluate that condition as true. If `x` is false, they evaluate `y`. We can use this order of operation to define two conjunctions: `x` and `!x && y`. If we write test cases for these two conjunctions, it is the same as if we tested `x || y`. Now we can use GPT on these converted predicates.
 

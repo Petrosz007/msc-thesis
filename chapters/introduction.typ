@@ -22,7 +22,7 @@ The state-of-the-art black-box testing methods are: @nidhra2012black @khan2012co
 1. _Equivalence Partitioning_: The input and output domains can be partitioned in a way, that values in each partition belong to the same Equivalence Class. This way, test cases are only required to have one value from each partition.
 2. _Boundary Value Analysis_: Test cases are created from the boundaries of Equivalence Classes. These can be the values just below, on, or just above the boundaries. This can catch usual off-by-one errors.
 3. _Fuzzing_: Black-box fuzz testing is about taking valid inputs and randomly mutating them to try to find implementation bugs. This approach has low code-coverage and requires a lot of test cases. @godefroid2007random There is also white-box fuzzing, which is much more effective, due to having access to the source code @godefroid2008automated.
-4. _Cause-Effect Graph_: We create a graph and creating links between the effect and its causes. There are four types of these links: indentity, negation, logical OR, and logical AND. There are some proposed automatic test generation tools from Cause-Effect Graphs @son2014test.
+4. _Cause-Effect Graph_: We create a graph and creating links between the effect and its causes. There are four types of these links: identity, negation, logical OR, and logical AND. There are some proposed automatic test generation tools from Cause-Effect Graphs @son2014test.
 5. _Orthogonal Array Testing_: OAT is a pairwise testing technique used when the input domain is small, but testing all the possible combinations of inputs would result in a too large test set @Rao2009Jul.
 6. _All Pair Testing_: All the unique pairs of inputs are in the test case set. This way all the possible pairs are tested, but the test set is quite large.
 7. _State Transition Testing_: Used for state machines or User Interfaces, where the transitions between states are tested.
@@ -47,7 +47,7 @@ The steps of Equivalence Partitioning are @thebook:
 
 Once we have the partitions, we can create test sets by creating a test case for each partition.
 
-It is possible to obtain the partitioning data without actually doing the partitioning @thebook. We can select the domain boundaries and use the boundaries to approximate the partitions. As borers are easier to compute than the entire partitions and we can generate test cases from these borders, this is a good approximate solution for equivalence partitioning.
+It is possible to obtain the partitioning data without actually doing the partitioning @thebook. We can select the domain boundaries and use the boundaries to approximate the partitions. As borers are easier to compute than the entire partitions, and we can generate test cases from these borders, this is a good approximate solution for equivalence partitioning.
 
 === Boundary Value Analysis
 
@@ -55,7 +55,7 @@ In most cases, potential bugs occur near the border of equivalence partitions, b
 
 Boundary Value Analaysis builds on Equivalence Partitioning and proposes ways to select test points from the partitions.
 
-Forgács and Kovács state, that "many textbooks, blogs, software testing courses suggest inappropriate BVA solutions." @thebook[p. 74]. They propose the following method for selecting test values from equvivalence partitions:
+Forgács and Kovács state, that "many textbooks, blogs, software testing courses suggest inappropriate BVA solutions." @thebook[p. 74]. They propose the following method for selecting test values from equivalence partitions:
 
 #figure(image("../images/ep_boundary.png"), caption: [EP with closed or open boundaries @thebook[p. 75]])
 
@@ -115,7 +115,7 @@ Because GPT Lang could resemble source code, one could think that we could exten
 
 After this, I had a user-friendly DSL for writing specifications in, but one challenge was, that the original GPT algorithm was only detailed for conjunctive forms. Disjunctions are an essential part of requirements and programming, so I wanted to research how I could make disjunctions work with GPT. In @or-to-ands, I detail this procedure. This is a great lift for GPT, as now the test designers don't have to think about how to bring conjunctive forms to disjunctive forms, because my program would handle that automatically. It not only saves time, but reduces the risk of human error.
 
-After that, I've researched how the number of test cases can be reduced in an algorithmic way. In @graph-reduction, I detail how I abstracted this problem to be about graph reduction and what different graph reduction algorithms I came up with. Graph reduction is an essential part of GPT, because it reduces the number of test cases needed to test the same behaviour by orders of magnitude. This was also a pretty hard procedure to do manually for GPT, so automation can save even more time for the test designers.
+After that, I've researched how the number of test cases can be reduced in an algorithmic way. In @graph-reduction, I detail how I abstracted this problem to be about graph reduction and what different graph reduction algorithms I came up with. Graph reduction is an essential part of GPT, because it reduces the number of test cases needed to test the same behavior by orders of magnitude. This was also a pretty hard procedure to do manually for GPT, so automation can save even more time for the test designers.
 
 In @validation, I'll validate that my implementation is correct and generates the test cases outlined in the book. This section also provides examples about how GPT works and what errors it can catch.
 
