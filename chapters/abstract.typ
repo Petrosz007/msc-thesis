@@ -2,9 +2,15 @@
 
 #align(center)[
   #heading(level: 1, numbering: none, [Abstract])
-
-  Software testing is a critical part of the Software Development Life Cycle. Test designers often have to create test cases manually from the requirements, which is costly and prone to human error. Boundary Value Analysis is a powerful method for testing programs, General Predicate Testing by Kovacs Attila and Forgacs Istvan is a systemic extension of BVA. There have been some automatic test generation tools based on BVA, but none on GPT. I'll show how I implemented the GPT algorithm to create an automatic test case generation tool. Natural language requirements have to be specified to be systematic and usable by programs, for which I've created Domain Specific Language. I explored how disjunctions can be used in GPT. I analyzed how the algorithmic test case reduction can reduce the number of test cases by up to 90.32% while covering all original test cases. With this tool, the amount of time spent by test designers on Boundary Value Analysis can be significantly reduced.
 ]
+
+  Software testing is a critical part of the Software Development Life Cycle. Test designers often have to create test cases manually from the requirements, which is costly and prone to human error. This is partly because natural language requirements are hard to formalize, and there are currently no tools to do it automatically.
+  
+  Boundary Value Analysis (BVA) is a powerful black-box method for testing programs. In their book Kovács Attila and Forgács István proposed General Predicate Testing (GPT), which is a systemic test case generation method based on BVA. There have been some automatic test generation tools based on BVA, but none on GPT. The book describes the GPT method for test designers for manual application, but that can be prone to human error. The GPT method was only defined for conjunctive forms, so if the requirements had disjunctions, the test designers had to convert them to conjunctions by hand. Furthermore, there was no formal way of reducing the number of test cases by hand, it relied on intuition.
+  
+  In this thesis I'll present an algorithmic formalization of the GPT method, making it possible to be easily implemented and integrated into automatic test generation tools. Based on that, I've created an implementation and published it as an open-source tool.
+  I've created a domain specific language (DSL) for specifying natural language requirements in a way that can be used for GPT. In addition, I added support to express disjunctions in the DSL. I've also defined an algorithm to reduce the number of initially generated test cases significantly. In some cases the reduction can reach 90.32%, while still covering all initial test cases. With this tool, the amount of time spent by test designers on General Predicate Testing can be significantly reduced.
+
 
 // #write_this[There should be an abstract, which is not a numbered chapter. It should summarise all the things and the results]
 

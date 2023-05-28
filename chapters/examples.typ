@@ -2,11 +2,11 @@
 
 = Validation <validation>
 
-In this chapter I'll validate that my automatic test generation algorithm works correctly. I'll compare my generated test cases to the ones shown in the book @thebook, so we can see if my algorithm differs from the proposed manual GPT method by Kovacs Attila and Forgacs Istvan.
+In this chapter, I'll validate that my automatic test generation algorithm works correctly. I'll compare my generated test cases to the ones shown in the book @thebook, so we can see if my algorithm differs from the proposed manual GPT method by Kovács Attila and Forgács István.
 
 == Comparing generated test cases for Paid Vacation Days <paid-vacation-days>
 
-Let's look at the Paid Vacation Days example @thebook[p. 100].
+We'll look at the Paid Vacation Days example @thebook[p. 100].
 
 #line(length: 100%, stroke: 2pt + gray)
 *Paid vacation days*
@@ -21,7 +21,8 @@ Additional days are provided according to the following criteria:
 Display the vacation days. The ages are integers and calculated with respect to the last day of December of the current year.
 #line(length: 100%, stroke: 2pt + gray)
 
-Let's look at the if statements one by one and compare the generated test cases. Note: this is without graph reduction. The test cases from the book will have an ID starting with B, my GPT implementation will have an M prefix.
+Let's look at the if statements one by one and compare the generated test cases. \
+_Note:_ this is without graph reduction. The test cases from the book will have an ID starting with B, my GPT implementation will have an M prefix.
 
 The full GPT Lang definition can be found in @paid_vacation_days.gpt-code.
 
@@ -60,9 +61,9 @@ With my GPT:
   caption: [R1-1 (1) with my GPT]
 )
 
-As we can see, my GPT covers all the test cases in the book, but has an additional test case: M1. This is, because in the book B3 is said to be an IN, but it is actually an ININ. M1 in this case is the IN. This is, because in the book In and ININ are not differentiated this concretely. Because ININ is a subset of IN it is actually enough to generate the ININ for an interval.
+As we can see, my GPT covers all the test cases in the book, but has an additional test case: M1. This is there, because in the book B3 is said to be an IN, but it is actually an ININ. M1 in this case is the IN. This is, because in the book IN and ININ are not differentiated this concretely. Because ININ is a subset of IN, it is actually enough to generate the ININ for an interval.
 
-I'm generating both the IN and the ININ, because there could be intervals which have an IN but not ININ (for example $[0,0.1]$ if the precision is $0.1$.). It is easier to generate both the IN and ININ and let Graph Reduction take care of joining the intervals.
+I'm generating both the IN and the ININ, because there could be intervals which have an IN but not ININ (for example $[0,0.1]$ if the precision is $0.1$.). It is easier to generate both the IN and ININ and let graph reduction take care of joining the intervals.
 
 #pagebreak()
 
@@ -141,13 +142,13 @@ With my GPT:
   caption: [R1-1 (3) with my GPT]
 )
 
-Here we can see a difference between my GPT and the book. In my implementation, the two different predicates for age (age < 60 AND age ≥ 18) get merged to one Interval: $[18, 60)$.
+Here we can see a difference between my GPT and the book. In my implementation, the two different predicates for age (age < 60 AND age ≥ 18) get merged to one interval: $[18, 60)$.
 
-For B15 I don't have an exact test case. This is because B15 combined the ON1 and the IN2. I have a separate test case for ON1 with M16 and a separate one for IN2 with M18.
+For B15, I don't have an exact test case. This is because B15 combined the ON1 and the IN2. I have a separate test case for ON1 with M16 and a separate one for IN2 with M18.
 
 M15 is the IN, as discussed previously.
 
-All in all, with analyzing B15 we can say that my test cases cover the ones in the book.
+All in all, with analyzing B15, we can say that my test cases cover the ones in the book.
 
 #pagebreak()
 
@@ -236,9 +237,9 @@ All the test cases from the book are covered by my GPT.
 
 M32 is the IN as explained previously. 
 
-M33 and M35 are ON points. My GPT merges treats service as $[15, 30)$ and age as $[18, 45)$. When generating ON points age will have 18 and 44, service will have 15 and 29. My GPT takes the Cartesian product of these, that's why M34 and M35 appeared, in addition to M36 which is in the book as B34.
+M33 and M35 are ON points. My GPT merges the predicates for service and treats it as $[15, 30)$ and age as $[18, 45)$. When generating ON points, age will have 18 and 44, service will have 15 and 29. My GPT takes the Cartesian product of these, that's why M34 and M35 appeared, in addition to M36, which is in the book as B34.
 
-M37 is the ININ of the intervals. The books says, that the ON points are also IN points, that's why there are no explicit IN intervals. As discussed previously, my GPT generates both IN and ININ points, so this ININ appeared. Which is not a problem, as it is a valid test case.
+M37 is the ININ of the intervals. The book says that the ON points are also IN points, that's why there are no explicit IN intervals. As discussed previously, my GPT generates both IN and ININ points, so this ININ appeared, which is not a problem, as it is a valid test case.
 
 // #pagebreak()
 \
@@ -372,9 +373,9 @@ In the book, the number of reduced test cases is 18. This is 40.9% of the origin
 
 My GPT with MONKE reduced the number of test cases to 22. This is 40% of the original test set.
 
-In conclusion, my GPT implementation generated all the test cases that were mentioned in the book. It also generated a few more test cases, but most of them can be reduced with Graph Reduction. The graph reduction reduced the number of test cases by a similar percentage than the reduction in the book.
+In conclusion, my GPT implementation generated all the test cases that were mentioned in the book. It also generated a few more test cases, but most of them can be reduced with graph reduction. The graph reduction reduced the number of test cases by a similar percentage than the reduction in the book.
 
-*Hypothesis:* The 4 additional test cases in the reduced test set are because of M34, M35 (ONs), the breaking of B42 into M47 + M48, and breaking B15 into M16 + M18. These are additional test cases which weren't in the book and these NTuples (test cases) can't be intersected with other NTuples, so they remain in the reduced graph. We can see, that #8 is M34, #4 is M35. I couldn't really trace back the effect of B42 and B15.
+*Hypothesis:* The 4 additional test cases in the reduced test set are due to M34, M35 (ONs), the breaking of B42 into M47 and M48, and breaking B15 into M16 and M18. These are additional test cases which weren't in the book. These NTuples (test cases) can't be intersected with other NTuples, so they remain in the reduced graph. We can see, that \#8 is M34, \#4 is M35. I couldn't trace back the effect of B42 and B15.
 
 // #pagebreak()
 
@@ -474,9 +475,9 @@ function paidVacationDays(age, service) {
 }
 ```
 
-The comments mark parts of the code with a number. I'll mutate these predicates or expressions and check what test cases fail and catch that there is some error in the implementation. These mutations are off-by-one errors, writing `>=`, `<=`, `>`, `<` in place of the original operator. These simulate if the programmer makes a mistake during implementation.
+The comments mark parts of the code with a number. I'll mutate these predicates or expressions and check what test cases fail. If there is some error in the implementation, the failing test cases indicate that we've caught the mutation. These mutations are off-by-one errors, writing `>=`, `<=`, `>`, `<` in place of the original operator. These simulate the case, when the programmer makes a mistake during implementation.
 
-The following tables (@mutation-testing1, @mutation-testing2, @mutation-testing3), you can see that every kind of mutation was caught by at least one test case generated by my GPT, shown in @paid-vacation-days-final-reduced-test-cases.
+In the following tables (@mutation-testing1, @mutation-testing2, @mutation-testing3), we can see that every kind of mutation was caught by at least one test case generated by my GPT, shown in @paid-vacation-days-final-reduced-test-cases.
 
 #figure(
   table(
@@ -599,5 +600,5 @@ The code can be found in @quarter.gpt-code.
 - BWDM's BVA had generated 12 test cases. 
 - My GPT with MONKE generated 11.
 
-Their paper didn't list all of the test cases, so I couldn't compare the actual test values. But, my GPT implementations generates around the same number of test cases. These are small functions, but in the future it'd be worth to test more complex functions, where there are orders of magnitude more test cases, to see if the GPT algorithm combined with Graph reduction makes a difference.
+Their paper didn't list all of the test cases, so I couldn't compare the actual test values. But, my GPT implementations generates around the same number of test cases. These are small functions, but in the future it'd be worth to test more complex functions, where there are orders of magnitude more test cases, to see if the GPT algorithm combined with graph reduction makes a difference.
 

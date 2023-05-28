@@ -19,6 +19,8 @@
 == Planned Vacation Days <paid_vacation_days.gpt-code>
 ```cpp
 /*
+Note: requirements can be specified and included in comments of GPT Lang files.
+
 Paid vacation days
 
 R1 The number of paid vacation days depends on age and years of service. Every employee receives at least 22 days per year.
