@@ -4,11 +4,11 @@
 
 == Motivation
 
-Software plays an ever-increasing role today. From entertainment, household appliances to self-driving cars, or medical devices. It is apparent, that there must not any errors in critical systems. There have been some examples, where simple errors caused catastrophic failures. For example, a NASA orbiter had a metric conversion error @nasa1999.
+Software plays an ever-increasing role today: From entertainment, and household appliances to self-driving cars, or medical devices. It is apparent, that in critical systems the margin of error is zero. There have been some examples, where simple errors caused catastrophic failures. For example, a NASA orbiter had a metric conversion error, which caused the loss of the \$125 million orbiter @nasa1999.
 
-Software testing is an essential part of the Software Development Life Cycle. Testing software allows us to be confident that the program adheres to the requirements and works as expected. There can be functional and non-functional requirements, in this thesis I'll focus on functional requirements.
+Software testing is an essential part of the Software Development Life Cycle @thebook. Testing software allows us to be confident that the program adheres to the requirements and works as expected. There can be functional and non-functional requirements, which our systems have to satisfy. In this thesis I'll focus on functional requirements.
 
-There are many testing strategies and tools to choose from. Because we're trying to catch errors in the implemented programs, we should not have erroneous tests. There are tools which can generate test cases automatically. These are advantageous, because it reduces the risk of human error and are usually faster than manual test case generation.
+There are many testing strategies and tools to choose from @khan2012comparative. Because we're trying to catch errors in the implemented programs, we should not have erroneous tests. There are tools which can generate test cases automatically @mustafa2021automated. These are advantageous, because they reduce the risk of human error and are usually faster than manual test case generation.
 
 Shipping software without comprehensive tests is a shortcut companies can make, when they don't want to spend too much time on testing and want to release as early as possible. If there were ways that'd make comprehensive testing accessible and would take only a small amount time, it'd solidify the culture around testing. This is why, I think, researching the field of automatic test generation tools is valuable.
 
