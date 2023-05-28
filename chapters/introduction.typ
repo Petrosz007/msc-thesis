@@ -106,7 +106,7 @@ Next, when I had working intervals, I had to implement the GPT algorithm. This w
 But creating NTuples by hand is quite some manual work, so I implemented a CSV-like structure for formalizing requirements. It was an easier and more user-friendly way to use GPT. I also created a web page for it that could be shared with other people.
 
 #align(center)[
-  #figure(image("../images/2023-05-13-18-52-39.png"), caption: [CSV-like GPT Lang])
+  #figure(image("../images/2023-05-13-18-52-39.jpg"), caption: [CSV-like GPT Lang])
 ]
 
 This was a working minimal viable product (MVP), but it was hard to write and reason about requirements in this format. This is why I created GPT Lang, which I'll detail in @gpt-lang. I had to design a domain specific language (DSL), that was easy to write and reason about, while also familiar to programmers, but still adhered to black box testing principles. I wrote a parser, designed an Abstract Syntax Tree (AST) and an Intermediary Representation (IR), and then transformed the IR to NTuples that GPT could use.

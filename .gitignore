@@ -1,2 +1,3 @@
 *.pdf
 !thesis.pdf
+.DS_Store
