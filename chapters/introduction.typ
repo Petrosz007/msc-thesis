@@ -4,8 +4,6 @@
 
 == Motivation
 
-#write_this[write this. write about testing, automatic test generation, GPT and predicate errors]
-
 Software plays an ever-increasing role today. From entertainment, household appliances to self-driving cars, or medical devices. It is apparent, that there must not any errors in critical systems. There have been some examples, where simple errors caused catastrophic failures. For example, a NASA orbiter had a metric conversion error @nasa1999.
 
 Software testing is an essential part of the Software Development Life Cycle. Testing software allows us to be confident that the program adheres to the requirements and works as expected. There can be functional and non-functional requirements, in this thesis I'll focus on functional requirements.
